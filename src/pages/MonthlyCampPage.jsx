@@ -61,7 +61,8 @@ export default function MonthlyCampPage() {
               { step: 'Step 3', event: 'Specialist Consultations Begin', desc: 'Doctors across specialities begin seeing patients in organized stations.' },
               { step: 'Step 4', event: 'Blood Sugar & Lab Tests', desc: 'Lab tests including blood sugar are conducted and results shared immediately.' },
               { step: 'Step 5', event: 'Eye Screening & Cataract Check', desc: 'Ophthalmologists conduct detailed vision testing and cataract screenings.' },
-              { step: 'Step 6', event: 'Medicine Distribution & Wrap-up', desc: 'Prescribed medicines are distributed. Patients referred for follow-up as needed.' },
+              { step: 'Step 6', event: 'Medicine Distribution', desc: 'Prescribed medicines are distributed. Patients referred for follow-up as needed.' },
+              { step: 'Step 7', event: 'Free Nutritious Meals', desc: 'Fresh, warm food is served to all patients and their accompanying families post-consultation.' },
             ].map((item, i) => (
               <motion.div
                 key={i}

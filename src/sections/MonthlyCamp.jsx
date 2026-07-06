@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Calendar, MapPin, Users, ClipboardList, Stethoscope, Pill, CheckCircle } from 'lucide-react';
+import { Calendar, MapPin, Users, ClipboardList, Stethoscope, Pill, CheckCircle, Utensils } from 'lucide-react';
 
 const steps = [
   {
@@ -43,6 +43,13 @@ const steps = [
     desc: 'Prescribed medicines are provided on the spot at no cost, ensuring patients can start treatment immediately.',
     color: 'bg-red-500',
     num: '06',
+  },
+  {
+    icon: Utensils,
+    title: 'Free Food Serving',
+    desc: 'A warm, healthy meal is provided to all patients and their families after they complete their medical check up.',
+    color: 'bg-amber-500',
+    num: '07',
   },
 ];
 

@@ -7,6 +7,7 @@ import {
   Scissors,
   BookOpen,
   Shield,
+  Utensils,
 } from 'lucide-react';
 
 export const services = [
@@ -89,5 +90,15 @@ export const services = [
     color: 'from-orange-500 to-orange-700',
     lightColor: 'bg-orange-50',
     iconColor: 'text-orange-600',
+  },
+  {
+    id: 9,
+    icon: Utensils,
+    title: 'Free Food Distribution',
+    description:
+      'A warm, healthy, and nutritious meal is served to all patients and their families after their medical camp check-up.',
+    color: 'from-pink-500 to-pink-700',
+    lightColor: 'bg-pink-50',
+    iconColor: 'text-pink-600',
   },
 ];

@@ -1,15 +1,15 @@
-import gallery1 from '../assets/images/gallery1.png';
-import gallery2 from '../assets/images/gallery2.png';
-import gallery3 from '../assets/images/gallery3.png';
-import gallery4 from '../assets/images/gallery4.png';
-import gallery5 from '../assets/images/gallery5.png';
-import gallery6 from '../assets/images/gallery6.png';
+import imgBP from '../assets/images/camp_vital_signs.jpeg';
+import imgEye from '../assets/images/camp_eye_screening.jpeg';
+import imgLab from '../assets/images/camp_lab_diagnostics.jpeg';
+import imgMedicine from '../assets/images/camp_medicine_distribution.jpeg';
+import imgTeam from '../assets/images/camp_team_group.jpeg';
+import imgAwareness from '../assets/images/camp_health_awareness.jpeg';
 
 export const galleryImages = [
-  { id: 1, src: gallery1, alt: 'Blood pressure screening at medical camp', category: 'Screening' },
-  { id: 2, src: gallery2, alt: 'Free eye screening at Kalwakurthy camp', category: 'Eye Care' },
-  { id: 3, src: gallery3, alt: 'Medical team and volunteers at camp', category: 'Team' },
-  { id: 4, src: gallery4, alt: 'Cataract surgery preparation', category: 'Surgery' },
-  { id: 5, src: gallery5, alt: 'Distributing free medicines to patients', category: 'Medicine' },
-  { id: 6, src: gallery6, alt: 'Health awareness session for villagers', category: 'Awareness' },
+  { id: 1, src: imgBP, alt: 'Volunteer checking blood pressure of a patient at the camp', category: 'Screening' },
+  { id: 2, src: imgEye, alt: 'Eye specialist performing vision test using trial frames', category: 'Eye Care' },
+  { id: 3, src: imgTeam, alt: 'Sri Satya Sai Aarogya Pradayini team of doctors and volunteers', category: 'Team' },
+  { id: 4, src: imgLab, alt: 'Medical blood testing equipment at the camp diagnostics lab', category: 'Diagnostics' },
+  { id: 5, src: imgMedicine, alt: 'Medicine distribution table with free prescriptions for patients', category: 'Medicine' },
+  { id: 6, src: imgAwareness, alt: 'Volunteers conducting a health awareness session and distributing info pamphlets to villagers', category: 'Awareness' },
 ];

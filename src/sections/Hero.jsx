@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, MapPin, Users } from 'lucide-react';
-import heroBg from '../assets/images/hero_bg.png';
+import heroBg from '../assets/images/camp_registration_queue.jpeg';
 
 const badges = [
   { icon: Calendar, label: 'Every 2nd Sunday' },

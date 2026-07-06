@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { CheckCircle, Target, Globe, Lightbulb } from 'lucide-react';
-import aboutIllustration from '../assets/images/about_illustration.png';
+import aboutIllustration from '../assets/images/camp_doctor_consultation.png';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
