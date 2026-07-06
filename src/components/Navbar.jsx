@@ -36,10 +36,10 @@ export default function Navbar() {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-400 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-400 bg-white/95 backdrop-blur-md shadow-medium border-b border-border ${
           scrolled
-            ? 'bg-white/95 backdrop-blur-md shadow-medium border-b border-border'
-            : 'bg-transparent'
+            ? 'lg:bg-white/95 lg:backdrop-blur-md lg:shadow-medium lg:border-b lg:border-border'
+            : 'lg:bg-transparent lg:shadow-none lg:border-transparent'
         }`}
       >
         <div className="container-max px-4 sm:px-6 lg:px-8">
@@ -50,10 +50,10 @@ export default function Navbar() {
                 <img src={logoImg} alt="Sri Satya Sai Aarogya Pradayini Logo" className="w-full h-full object-cover" />
               </div>
               <div className="hidden sm:block">
-                <p className={`font-poppins font-bold text-sm leading-tight transition-colors duration-300 ${scrolled ? 'text-primary' : 'text-white'}`}>
+                <p className={`font-poppins font-bold text-sm leading-tight transition-colors duration-300 text-primary ${scrolled ? 'lg:text-primary' : 'lg:text-white'}`}>
                   Sri Satya Sai
                 </p>
-                <p className={`font-poppins font-semibold text-xs transition-colors duration-300 ${scrolled ? 'text-text-secondary' : 'text-white/80'}`}>
+                <p className={`font-poppins font-semibold text-xs transition-colors duration-300 text-text-secondary ${scrolled ? 'lg:text-text-secondary' : 'lg:text-white/80'}`}>
                   Aarogya Pradayini
                 </p>
               </div>
@@ -97,8 +97,8 @@ export default function Navbar() {
               <button
                 id="mobile-menu-btn"
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className={`lg:hidden p-2 rounded-xl transition-all duration-300 ${
-                  scrolled ? 'text-primary hover:bg-primary/10' : 'text-white hover:bg-white/15'
+                className={`lg:hidden p-2 rounded-xl transition-all duration-300 text-primary hover:bg-primary/10 ${
+                  scrolled ? 'lg:text-primary lg:hover:bg-primary/10' : 'lg:text-white lg:hover:bg-white/15'
                 }`}
                 aria-label="Toggle mobile menu"
               >
