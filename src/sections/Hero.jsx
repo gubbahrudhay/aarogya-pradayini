@@ -52,7 +52,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-poppins font-bold text-white text-shadow leading-tight mb-6"
+          className="text-3xl sm:text-6xl md:text-7xl lg:text-8xl font-poppins font-bold text-white text-shadow leading-tight mb-6"
         >
           Free Healthcare.
           <br />
@@ -66,7 +66,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.25 }}
-          className="text-xl md:text-2xl text-white/85 font-inter max-w-3xl mx-auto mb-10 leading-relaxed"
+          className="text-base sm:text-xl md:text-2xl text-white/85 font-inter max-w-3xl mx-auto mb-10 leading-relaxed"
         >
           Sri Satya Sai Aarogya Pradayini organizes free medical camps on the second Sunday of every month in Kalwakurthy
           where everyone is welcome — regardless of background or ability to pay.
@@ -115,18 +115,6 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <div className="flex flex-col items-center gap-2">
-          <p className="text-white/60 text-xs font-inter tracking-wider uppercase">Scroll</p>
-          <div className="w-0.5 h-8 bg-white/40 rounded-full animate-pulse" />
-        </div>
-      </motion.div>
     </section>
   );
 }

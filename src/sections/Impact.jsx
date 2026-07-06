@@ -57,15 +57,6 @@ const stats = [
     bg: 'bg-green-500/20',
   },
   {
-    icon: Award,
-    end: 24,
-    suffix: '+',
-    label: 'Medical Specialists',
-    desc: 'Experienced doctors volunteering their time',
-    color: 'text-orange-400',
-    bg: 'bg-orange-500/20',
-  },
-  {
     icon: Heart,
     end: 100,
     suffix: '%',

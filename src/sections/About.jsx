@@ -113,7 +113,7 @@ export default function About() {
 
             <motion.div variants={fadeUp} transition={{ duration: 0.5 }} className="flex flex-wrap gap-6">
               {[
-                { label: 'Patients Served', value: '500+/month' },
+                { label: 'Patients / Month', value: '500+' },
                 { label: 'Total Camps Done', value: '50+' },
                 { label: 'Cost to Patient', value: '₹0' },
               ].map((stat) => (
