@@ -37,22 +37,41 @@ export default function DonatePage() {
         <div className="container-max">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
-              { icon: Shield, title: 'Trusted & Transparent', desc: 'We publish full financial reports. Every rupee is accounted for.' },
+              {
+                icon: Shield,
+                title: 'Trusted & Transparent',
+                desc: 'We publish full financial reports. Every rupee is accounted for.',
+                action: { label: 'View Financial Report', href: '#' }
+              },
               { icon: FileText, title: 'Tax Exemption', desc: 'Donations may be eligible for tax benefits under Section 80G (consult your CA).' },
               { icon: Heart, title: '100% To Patients', desc: 'No administrative fees deducted. Every donation reaches patients directly.' },
-            ].map(({ icon: Icon, title, desc }) => (
+            ].map(({ icon: Icon, title, desc, action }) => (
               <motion.div
                 key={title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="bg-white rounded-2xl p-7 border border-border text-center"
+                className="bg-white rounded-2xl p-7 border border-border text-center flex flex-col justify-between items-center"
               >
-                <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Icon className="w-7 h-7 text-primary" />
+                <div>
+                  <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Icon className="w-7 h-7 text-primary" />
+                  </div>
+                  <h3 className="font-poppins font-semibold text-text-primary mb-2">{title}</h3>
+                  <p className="text-text-secondary font-inter text-sm leading-relaxed">{desc}</p>
                 </div>
-                <h3 className="font-poppins font-semibold text-text-primary mb-2">{title}</h3>
-                <p className="text-text-secondary font-inter text-sm">{desc}</p>
+                {action && (
+                  <div className="mt-4 w-full">
+                    <a
+                      href={action.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center bg-primary/10 hover:bg-primary text-primary hover:text-white font-semibold text-xs px-4 py-2.5 rounded-xl transition-all duration-300 font-inter w-full"
+                    >
+                      {action.label}
+                    </a>
+                  </div>
+                )}
               </motion.div>
             ))}
           </div>
