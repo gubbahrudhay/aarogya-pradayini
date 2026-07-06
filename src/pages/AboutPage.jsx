@@ -7,10 +7,30 @@ import { Heart, Target, Users, Award } from 'lucide-react';
 const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } };
 
 const team = [
-  { name: 'Dr. R. Venkatesh', role: 'General Physician & Founder', initials: 'RV', color: 'from-blue-500 to-blue-700' },
-  { name: 'Dr. S. Padmavathi', role: 'Ophthalmologist', initials: 'SP', color: 'from-purple-500 to-purple-700' },
-  { name: 'Dr. M. Kishan Rao', role: 'Cardiologist', initials: 'MK', color: 'from-red-500 to-red-700' },
-  { name: 'Dr. L. Anitha', role: 'Diabetologist', initials: 'LA', color: 'from-green-500 to-green-700' },
+  { name: 'Dr. Rajesh Gubba', initials: 'RG', color: 'from-blue-500 to-blue-700', role: 'Medical Specialist' },
+  { name: 'Dr. Swamy', initials: 'DS', color: 'from-orange-500 to-orange-700', role: 'Medical Specialist' },
+  { name: 'Dr. Chandrakanth Chithanuri', initials: 'CC', color: 'from-red-500 to-red-700', role: 'Medical Specialist' },
+  { name: 'Dr. Sai Charan Gubba', initials: 'SG', color: 'from-teal-500 to-teal-700', role: 'Medical Specialist' },
+  { name: 'Dr. Chaitanya Kuppaganthu', initials: 'CK', color: 'from-purple-500 to-purple-700', role: 'Medical Specialist' },
+  { name: 'Dr. Harish', initials: 'DH', color: 'from-green-500 to-green-700', role: 'Medical Specialist' },
+  { name: 'Dr. K. Sateesh Kumar', initials: 'KS', color: 'from-indigo-500 to-indigo-700', role: 'Medical Specialist' },
+  { name: 'Dr. Kranthi', initials: 'DK', color: 'from-pink-500 to-pink-700', role: 'Medical Specialist' },
+  { name: 'Dr. Kavitha', initials: 'DK', color: 'from-amber-500 to-amber-700', role: 'Medical Specialist' },
+  { name: 'Dr. Krishna Veramalla', initials: 'KV', color: 'from-emerald-500 to-emerald-700', role: 'Medical Specialist' },
+  { name: 'Dr. Manoj Kumar', initials: 'MK', color: 'from-cyan-500 to-cyan-700', role: 'Medical Specialist' },
+  { name: 'Dr. Naveen', initials: 'DN', color: 'from-sky-500 to-sky-700', role: 'Medical Specialist' },
+  { name: 'Dr. Navaneetha', initials: 'DN', color: 'from-violet-500 to-violet-700', role: 'Medical Specialist' },
+  { name: 'Dr. Poojitha', initials: 'DP', color: 'from-rose-500 to-rose-700', role: 'Medical Specialist' },
+  { name: 'Dr. Pravalika Alladi', initials: 'PA', color: 'from-fuchsia-500 to-fuchsia-700', role: 'Medical Specialist' },
+  { name: 'Dr. Raghuveer Machiraju', initials: 'RM', color: 'from-blue-600 to-blue-800', role: 'Medical Specialist' },
+  { name: 'Dr. Ramya Sree Gubba', initials: 'RG', color: 'from-orange-600 to-orange-800', role: 'Medical Specialist' },
+  { name: 'Dr. Ravi Shankar', initials: 'RS', color: 'from-red-600 to-red-800', role: 'Medical Specialist' },
+  { name: 'Dr. Sridhar', initials: 'DS', color: 'from-teal-600 to-teal-800', role: 'Eye Specialist' },
+  { name: 'Dr. Srinivas Dusa', initials: 'SD', color: 'from-purple-600 to-purple-800', role: 'Medical Specialist' },
+  { name: 'Dr. Srinu', initials: 'DS', color: 'from-green-600 to-green-800', role: 'Medical Specialist' },
+  { name: 'Dr. Vidya Sagar', initials: 'VS', color: 'from-indigo-600 to-indigo-800', role: 'Medical Specialist' },
+  { name: 'Dr. Vijay Kumar', initials: 'VK', color: 'from-pink-600 to-pink-800', role: 'Medical Specialist' },
+  { name: 'Dr. Yashwanth Raani', initials: 'YR', color: 'from-amber-600 to-amber-800', role: 'Medical Specialist' },
 ];
 
 export default function AboutPage() {
@@ -101,7 +121,7 @@ export default function AboutPage() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
+                transition={{ delay: (i % 4) * 0.08, duration: 0.4 }}
                 className="card p-8 text-center"
               >
                 <div className={`w-20 h-20 bg-gradient-to-br ${member.color} rounded-full flex items-center justify-center mx-auto mb-5`}>
