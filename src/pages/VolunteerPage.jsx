@@ -16,8 +16,17 @@ export default function VolunteerPage() {
   const { register, handleSubmit, formState: { errors, isSubmitSuccessful }, reset } = useForm();
 
   const onSubmit = (data) => {
-    console.log('Volunteer form:', data);
-    // In production: send to backend / email service
+    const subject = encodeURIComponent(`Volunteer Registration - ${data.name}`);
+    const body = encodeURIComponent(`Sri Satya Sai Aarogya Pradayini Volunteer Application:
+
+Name: ${data.name}
+Email: ${data.email}
+Phone: ${data.phone}
+Role: ${data.role}
+
+About the Volunteer:
+${data.message || 'N/A'}`);
+    window.location.href = `mailto:srisatyasaiaarogyapradayini@gmail.com?subject=${subject}&body=${body}`;
     reset();
   };
 
