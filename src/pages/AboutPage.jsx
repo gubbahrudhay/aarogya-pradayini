@@ -1,0 +1,121 @@
+import { motion } from 'framer-motion';
+import SEO from '../components/SEO';
+import About from '../sections/About';
+import Impact from '../sections/Impact';
+import { Heart, Target, Users, Award } from 'lucide-react';
+
+const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } };
+
+const team = [
+  { name: 'Dr. R. Venkatesh', role: 'General Physician & Founder', initials: 'RV', color: 'from-blue-500 to-blue-700' },
+  { name: 'Dr. S. Padmavathi', role: 'Ophthalmologist', initials: 'SP', color: 'from-purple-500 to-purple-700' },
+  { name: 'Dr. M. Kishan Rao', role: 'Cardiologist', initials: 'MK', color: 'from-red-500 to-red-700' },
+  { name: 'Dr. L. Anitha', role: 'Diabetologist', initials: 'LA', color: 'from-green-500 to-green-700' },
+];
+
+export default function AboutPage() {
+  return (
+    <>
+      <SEO
+        title="About Us | Sri Satya Sai Aarogya Pradayini"
+        description="Learn about our mission to provide free healthcare to the people of Kalwakurthy through monthly medical camps, inspired by Love All Serve All."
+      />
+
+      {/* Hero */}
+      <section className="pt-32 pb-20 bg-gradient-primary text-white">
+        <div className="container-max section-padding py-0">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
+            className="max-w-3xl"
+          >
+            <motion.span variants={fadeUp} transition={{ duration: 0.5 }} className="inline-flex items-center gap-2 bg-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full font-inter mb-6">
+              About Us
+            </motion.span>
+            <motion.h1 variants={fadeUp} transition={{ duration: 0.6 }} className="section-title text-white mb-6">
+              Rooted in Service,<br />Driven by Compassion
+            </motion.h1>
+            <motion.p variants={fadeUp} transition={{ duration: 0.6 }} className="text-white/80 font-inter text-xl leading-relaxed">
+              Sri Satya Sai Aarogya Pradayini was born out of a vision to bring world-class
+              healthcare to every doorstep in Kalwakurthy — completely free of charge.
+            </motion.p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* About Section reused */}
+      <About />
+
+      {/* Our Story */}
+      <section className="section-padding bg-bg">
+        <div className="container-max">
+          <div className="max-w-3xl mx-auto text-center">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={{ visible: { transition: { staggerChildren: 0.12 } } }}
+            >
+              <motion.h2 variants={fadeUp} transition={{ duration: 0.6 }} className="section-title mb-6">
+                Our <span className="gradient-text">Story</span>
+              </motion.h2>
+              <motion.div variants={fadeUp} transition={{ duration: 0.6 }} className="space-y-6 text-text-secondary font-inter text-lg text-left">
+                <p>
+                  Founded in the spirit of Sri Satya Sai Baba's timeless teaching — <em className="text-primary font-semibold">"Love All, Serve All"</em> — our organization set out with a simple mission: to ensure that no person in Kalwakurthy ever had to suffer due to lack of access to quality medical care.
+                </p>
+                <p>
+                  What started as a small initiative by a group of dedicated doctors and volunteers has grown into a thriving monthly institution. Every camp brings together specialist physicians, trained nurses, and passionate volunteers to serve hundreds of patients in a single day.
+                </p>
+                <p>
+                  We believe that healthcare is not a privilege of the wealthy — it is a fundamental human right. Every person who walks into our camp, regardless of their background, receives the same quality of care with the same warmth and dignity.
+                </p>
+                <p>
+                  Our work continues to expand. Free cataract surgeries have restored sight to dozens of patients. Blood sugar and blood pressure screenings have caught life-threatening conditions early. And every month, the community of Kalwakurthy gathers in trust and hope.
+                </p>
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Team */}
+      <section className="section-padding bg-white">
+        <div className="container-max">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={{ visible: { transition: { staggerChildren: 0.12 } } }}
+            className="text-center mb-14"
+          >
+            <motion.span variants={fadeUp} className="badge mb-4">Our Doctors</motion.span>
+            <motion.h2 variants={fadeUp} className="section-title mb-4">
+              The Experts Behind <span className="gradient-text">Every Camp</span>
+            </motion.h2>
+          </motion.div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {team.map((member, i) => (
+              <motion.div
+                key={member.name}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
+                className="card p-8 text-center"
+              >
+                <div className={`w-20 h-20 bg-gradient-to-br ${member.color} rounded-full flex items-center justify-center mx-auto mb-5`}>
+                  <span className="text-white font-poppins font-bold text-2xl">{member.initials}</span>
+                </div>
+                <h3 className="font-poppins font-semibold text-text-primary mb-1">{member.name}</h3>
+                <p className="text-text-secondary text-sm font-inter">{member.role}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <Impact />
+    </>
+  );
+}
