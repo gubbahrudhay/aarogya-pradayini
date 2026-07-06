@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+import FloatingDonateButton from './components/FloatingDonateButton';
 
 // Lazy-loaded pages
 const Home = lazy(() => import('./pages/Home'));
@@ -45,6 +46,7 @@ function AppRoutes() {
     <>
       <ScrollToTop />
       <Navbar />
+      <FloatingDonateButton />
       <main>
         <Suspense fallback={<PageLoader />}>
           <AnimatePresence mode="wait">
