@@ -111,15 +111,15 @@ export default function About() {
               ))}
             </motion.div>
 
-            <motion.div variants={fadeUp} transition={{ duration: 0.5 }} className="flex flex-wrap gap-6">
+            <motion.div variants={fadeUp} transition={{ duration: 0.5 }} className="grid grid-cols-3 gap-3 sm:gap-4">
               {[
-                { label: 'Patients / Month', value: '500+' },
-                { label: 'Total Camps Done', value: '50+' },
-                { label: 'Cost to Patient', value: '₹0' },
+                { label: 'Patients / Month', value: '500+', bg: 'bg-blue-50/50' },
+                { label: 'Total Camps Done', value: '50+', bg: 'bg-orange-50/50' },
+                { label: 'Cost to Patient', value: '₹0', bg: 'bg-green-50/50' },
               ].map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <p className="font-poppins font-bold text-3xl text-primary">{stat.value}</p>
-                  <p className="text-text-secondary text-sm font-inter">{stat.label}</p>
+                <div key={stat.label} className={`p-3 sm:p-4 rounded-2xl border border-border text-center ${stat.bg} hover:shadow-soft transition-all duration-300`}>
+                  <p className="font-poppins font-extrabold text-xl sm:text-3xl text-primary leading-none mb-1">{stat.value}</p>
+                  <p className="text-text-secondary text-[10px] sm:text-xs font-semibold font-inter leading-tight">{stat.label}</p>
                 </div>
               ))}
             </motion.div>

@@ -4,33 +4,27 @@ import { Stethoscope, Eye, Pill, HeartHandshake, ArrowRight } from 'lucide-react
 
 const usages = [
   {
+    icon: Pill,
+    title: 'Free Medicines',
+    desc: 'Procuring essential medicines distributed free to all patients at every camp.',
+    percent: 80,
+    color: 'bg-green-500',
+  },
+  {
     icon: Stethoscope,
     title: 'Medical Equipment',
-    desc: 'Funding specialist equipment like slit lamps, ECG machines, blood sugar monitors, and surgical tools.',
-    percent: 40,
+    desc: 'ECG machines, blood sugar monitors, and surgical tools.',
+    percent: 10,
     color: 'bg-blue-500',
   },
   {
     icon: Eye,
     title: 'Cataract Surgeries',
     desc: 'Covering surgical costs, consumables, and post-op medicines for free cataract operations.',
-    percent: 30,
+    percent: 10,
     color: 'bg-accent',
   },
-  {
-    icon: Pill,
-    title: 'Free Medicines',
-    desc: 'Procuring essential medicines distributed free to all patients at every camp.',
-    percent: 20,
-    color: 'bg-green-500',
-  },
-  {
-    icon: HeartHandshake,
-    title: 'Camp Operations',
-    desc: 'Logistics, transport, tent setup, food for volunteers, and administrative support.',
-    percent: 10,
-    color: 'bg-purple-500',
-  },
+,
 ];
 
 const fadeUp = {
