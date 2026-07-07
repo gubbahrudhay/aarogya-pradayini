@@ -81,6 +81,7 @@ export default function BlogDetails() {
       <SEO
         title={`${item.title} | Sri Satya Sai Aarogya Pradayini`}
         description={item.summary}
+        image={item.coverImage}
       />
 
       {/* Banner */}
