@@ -12,7 +12,7 @@ const Home = lazy(() => import('./pages/Home'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const ServicesPage = lazy(() => import('./pages/ServicesPage'));
 const MonthlyCampPage = lazy(() => import('./pages/MonthlyCampPage'));
-const GalleryPage = lazy(() => import('./pages/GalleryPage'));
+const Gallery = lazy(() => import('./pages/Gallery'));
 const VolunteerPage = lazy(() => import('./pages/VolunteerPage'));
 const DonatePage = lazy(() => import('./pages/DonatePage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
@@ -57,7 +57,7 @@ function AppRoutes() {
               <Route path="/about" element={<PageWrapper><AboutPage /></PageWrapper>} />
               <Route path="/services" element={<PageWrapper><ServicesPage /></PageWrapper>} />
               <Route path="/monthly-camp" element={<PageWrapper><MonthlyCampPage /></PageWrapper>} />
-              <Route path="/gallery" element={<PageWrapper><GalleryPage /></PageWrapper>} />
+              <Route path="/gallery" element={<PageWrapper><Gallery /></PageWrapper>} />
               <Route path="/blog" element={<PageWrapper><Blogs /></PageWrapper>} />
               <Route path="/blog/:slug" element={<PageWrapper><BlogDetails /></PageWrapper>} />
               <Route path="/volunteer" element={<PageWrapper><VolunteerPage /></PageWrapper>} />

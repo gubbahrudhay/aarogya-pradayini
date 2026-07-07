@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 import 'react-photo-view/dist/react-photo-view.css';
-import { galleryImages } from '../data/gallery';
+import { photos } from '../data/gallery';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ZoomIn } from 'lucide-react';
 
@@ -54,7 +54,7 @@ export default function Gallery() {
             variants={stagger}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
           >
-            {galleryImages.map((img, i) => (
+            {photos.slice(0, 6).map((img, i) => (
               <motion.div
                 key={img.id}
                 variants={fadeUp}
