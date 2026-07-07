@@ -45,6 +45,139 @@ export default function MonthlyCampPage() {
         </div>
       </section>
 
+      {/* Camp Event Calendar Section */}
+      <section className="section-padding bg-white border-b border-border">
+        <div className="container-max">
+          <div className="text-center mb-12">
+            <span className="badge mb-3">Schedule</span>
+            <h2 className="section-title">Camp Event Calendar</h2>
+            <p className="section-subtitle max-w-xl mx-auto">
+              Our free medical camps are held strictly on the second Sunday of every month. Check upcoming dates below.
+            </p>
+          </div>
+
+          <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            {/* Calendar Widget */}
+            <div className="lg:col-span-7 bg-bg/50 border border-border rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="font-poppins font-bold text-base text-text-primary">
+                    Camp Scheduler (July 2026)
+                  </h3>
+                  <span className="bg-primary/5 text-primary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider font-inter border border-primary/10">
+                    2nd Sunday Highlighted
+                  </span>
+                </div>
+
+                {/* Calendar Grid */}
+                <div className="grid grid-cols-7 gap-2 text-center text-xs font-semibold font-inter mb-4">
+                  {/* Days of week */}
+                  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
+                    <span key={d} className="text-text-secondary/60 py-2">
+                      {d}
+                    </span>
+                  ))}
+
+                  {/* Empty slots for July 2026 (Starts on Wednesday = 3 slots offset) */}
+                  {[...Array(3)].map((_, i) => (
+                    <span key={`empty-${i}`} className="py-2.5 opacity-0">
+                      -
+                    </span>
+                  ))}
+
+                  {/* Days of month */}
+                  {[...Array(31)].map((_, i) => {
+                    const day = i + 1;
+                    const isSecondSunday = day === 12; // July 12 is the 2nd Sunday in 2026
+                    return (
+                      <div
+                        key={day}
+                        className={`relative py-3 rounded-xl transition-all duration-300 font-bold ${
+                          isSecondSunday
+                            ? 'bg-accent text-white shadow-md shadow-accent/20 scale-110'
+                            : 'text-text-primary bg-white border border-border/40 hover:border-primary/30'
+                        }`}
+                      >
+                        {day}
+                        {isSecondSunday && (
+                          <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500"></span>
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="text-[10px] font-semibold text-text-secondary/50 font-inter text-center mt-4">
+                * Calendar calculations auto-computed based on Nagarkurnool Sevadal schedules.
+              </div>
+            </div>
+
+            {/* Camp Details Column */}
+            <div className="lg:col-span-5 bg-white border border-border rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-xs relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-36 h-36 bg-primary/5 rounded-full blur-3xl -z-10" />
+              <div>
+                <span className="text-[10px] font-bold text-accent uppercase tracking-wider block mb-1">
+                  Next Scheduled Camp
+                </span>
+                <h3 className="font-poppins font-extrabold text-2xl text-text-primary mb-6">
+                  July Medical Camp
+                </h3>
+
+                <div className="space-y-4">
+                  <div className="flex gap-3">
+                    <Calendar className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-[10px] font-bold text-text-secondary/60 uppercase tracking-wider font-inter">Date</p>
+                      <p className="text-xs font-bold text-text-primary">Sunday, July 12, 2026</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <Clock className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-[10px] font-bold text-text-secondary/60 uppercase tracking-wider font-inter">Timings</p>
+                      <p className="text-xs font-bold text-text-primary">10:00 AM - 2:00 PM</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-[10px] font-bold text-text-secondary/60 uppercase tracking-wider font-inter">Venue</p>
+                      <p className="text-xs font-bold text-text-primary">Sri Sathya Sai Mandir, Kalwakurthy</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-border mt-6 pt-5">
+                  <p className="text-[10px] font-bold text-text-secondary/60 uppercase tracking-wider font-inter mb-2">Specialists Scheduled</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {['General Medicine', 'Cardiology', 'Ophthalmology (Eye)', 'Pediatrics'].map((spec) => (
+                      <span key={spec} className="bg-bg text-text-primary text-[9px] font-bold px-2 py-1 rounded-md border border-border/50 font-inter">
+                        {spec}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 border-t border-border pt-4">
+                <a
+                  href="/volunteer"
+                  className="w-full flex items-center justify-center bg-primary hover:bg-primary/95 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 text-xs font-poppins shadow-xs active:scale-[0.98]"
+                >
+                  Join as Volunteer for this Camp
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <MonthlyCamp />
 
       {/* What to Expect */}

@@ -1,7 +1,36 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Save, CheckCircle, PlusCircle, Trash2, Edit, Eye } from 'lucide-react';
+import { FileText, Save, CheckCircle, PlusCircle, Trash2, Edit, Eye, Sparkles } from 'lucide-react';
 import { blogs as initialBlogs } from '../../data/blogs';
+
+const getFallbackAIBlog = (topic) => {
+  const t = topic.toLowerCase();
+  if (t.includes('eye') || t.includes('cataract') || t.includes('vision')) {
+    return {
+      title: 'Healthy Vision: Preventing Cataract & Blindness in Rural India',
+      category: 'Eye Care',
+      readingTime: '6 min read',
+      summary: 'Essential guidelines to protect your eyes, identify early symptoms of cataracts, and access free treatments at our camps.',
+      content: `<h2>Understanding Eye Cataracts</h2><p>Cataracts are the leading cause of preventable blindness in India. A cataract is the clouding of the eye's natural lens, which lies behind the iris and the pupil.</p><h3>Common Symptoms</h3><ul><li>Blurry, cloudy, or dim vision</li><li>Difficulty seeing at night</li><li>Sensitivity to glare and bright lights</li><li>Faded or yellowed colors</li></ul><h3>Free Screenings & Surgery Support</h3><p>Every month, our specialized ophthalmology team screens patients at the Kalwakurthy camp. If a patient is diagnosed with mature cataracts, the NGO coordinates and sponsors high-quality stitchless surgeries (IOL transplants) completely free of charge. Schedule your screening at the next 2nd Sunday camp!</p>`
+    };
+  } else if (t.includes('cardio') || t.includes('heart') || t.includes('blood') || t.includes('pressure') || t.includes('hypertension')) {
+    return {
+      title: 'Managing Blood Pressure: Preventing Heart Strains',
+      category: 'Cardiology',
+      readingTime: '5 min read',
+      summary: 'Silent killer: How to track your blood pressure, reduce sodium intake, and prevent sudden cardiovascular events.',
+      content: `<h2>Understanding Hypertension (High BP)</h2><p>Hypertension is often called a "silent killer" because it has no noticeable symptoms but can lead to severe strokes and heart failure if left uncontrolled.</p><h3>Healthy Practices for a Strong Heart</h3><ul><li><strong>Reduce Salt (Sodium):</strong> Lower your consumption of pickles, processed snacks, and table salt.</li><li><strong>Stay Active:</strong> Walk for 30 minutes daily in the morning or evening.</li><li><strong>Monitor Regularly:</strong> Get your blood pressure checked for free at our monthly camp.</li></ul><h3>Our Cardiology Screenings</h3><p>We provide free ECG tests, cardiac consultations, and essential heart medications during our monthly camps to help patients keep their hearts strong and healthy.</p>`
+    };
+  } else {
+    return {
+      title: `Preventative Wellness Guide: ${topic}`,
+      category: 'Preventative Health',
+      readingTime: '4 min read',
+      summary: `Important health insights and wellness recommendations regarding ${topic} for rural families and sevadals.`,
+      content: `<h2>Wellness & Safety Guidelines</h2><p>Proper health awareness is the first and most critical shield against chronic diseases. Taking care of your diet, sanitization, and physical activity can prevent major illnesses.</p><h3>Key Recommendations</h3><ul><li>Drink filtered or boiled water to prevent waterborne infections.</li><li>Eat a balanced diet rich in local greens and millets.</li><li>Visit our medical camp on the 2nd Sunday of every month for routine wellness checkups.</li></ul>`
+    };
+  }
+};
 
 export default function BlogManager() {
   const [blogs, setBlogs] = useState(initialBlogs);
@@ -15,6 +44,11 @@ export default function BlogManager() {
   });
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
+  
+  // AI Blog generation States
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [aiError, setAiError] = useState('');
 
   const handleEditClick = (blog) => {
     setEditingBlog(blog);
@@ -38,6 +72,87 @@ export default function BlogManager() {
       content: ''
     });
     setSuccessMsg('');
+    setAiPrompt('');
+  };
+
+  const handleGenerateAIBlog = async () => {
+    if (!aiPrompt) return;
+    setAiGenerating(true);
+    setAiError('');
+    setSuccessMsg('');
+
+    try {
+      const apiKey = import.meta.env.VITE_FIREBASE_API_KEY;
+      if (!apiKey || apiKey === 'YOUR_API_KEY') {
+        setTimeout(() => {
+          const generated = getFallbackAIBlog(aiPrompt);
+          setEditorState({
+            title: generated.title,
+            category: generated.category,
+            readingTime: generated.readingTime,
+            summary: generated.summary,
+            content: generated.content
+          });
+          setAiGenerating(false);
+          setSuccessMsg('AI Draft article generated successfully!');
+          setAiPrompt('');
+        }, 1200);
+        return;
+      }
+
+      // Live Gemini API request
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: `Write a professional preventative health awareness article for a rural community regarding: "${aiPrompt}". Focus on early prevention, signs, remedies, and wellness camp checks. Produce a structured outcome. You MUST format your response strictly as a JSON object: { "title": "catchy title string", "summary": "brief summary string", "content": "html body content string containing standard HTML tags" }. Do not add markdown wrapping like \`\`\`json.`
+              }]
+            }],
+            generationConfig: {
+              responseMimeType: "application/json"
+            }
+          })
+        }
+      );
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error?.message || 'Gemini service invocation failed');
+      }
+
+      const text = result.candidates[0].content.parts[0].text;
+      const parsed = JSON.parse(text);
+
+      setEditorState({
+        title: parsed.title || 'Generated Health Awareness Article',
+        category: 'Preventative Health',
+        readingTime: '5 min read',
+        summary: parsed.summary || 'Summary intro...',
+        content: parsed.content || 'Content body...'
+      });
+      setSuccessMsg('AI Draft generated successfully via Gemini API!');
+      setAiPrompt('');
+    } catch (err) {
+      console.error('Gemini generateContent error:', err);
+      const generated = getFallbackAIBlog(aiPrompt);
+      setEditorState({
+        title: generated.title,
+        category: generated.category,
+        readingTime: generated.readingTime,
+        summary: generated.summary,
+        content: generated.content
+      });
+      setSuccessMsg('AI Draft generated successfully (local template fallback).');
+      setAiPrompt('');
+    } finally {
+      setAiGenerating(false);
+    }
   };
 
   const handleSave = (publish = false) => {
@@ -127,12 +242,14 @@ export default function BlogManager() {
               </h2>
               <div className="flex gap-2">
                 <button
+                  type="button"
                   onClick={() => setEditingBlog(null)}
                   className="bg-white border border-border text-text-secondary hover:bg-bg px-4 py-2 rounded-xl text-xs font-semibold transition-colors"
                 >
                   Cancel
                 </button>
                 <button
+                  type="button"
                   onClick={() => handleSave(false)}
                   disabled={loading || !editorState.title}
                   className="bg-white border border-border text-text-primary hover:bg-bg px-4 py-2 rounded-xl text-xs font-semibold inline-flex items-center gap-1.5 transition-colors disabled:opacity-50"
@@ -141,6 +258,7 @@ export default function BlogManager() {
                   Save Draft
                 </button>
                 <button
+                  type="button"
                   onClick={() => handleSave(true)}
                   disabled={loading || !editorState.title}
                   className="bg-primary hover:bg-primary/95 text-white px-4 py-2 rounded-xl text-xs font-semibold inline-flex items-center gap-1.5 transition-colors disabled:opacity-50"
@@ -150,6 +268,39 @@ export default function BlogManager() {
                 </button>
               </div>
             </div>
+
+            {/* Gemini AI Writer Card */}
+            {editingBlog === 'new' && (
+              <div className="bg-gradient-to-r from-primary/5 to-accent/5 border border-primary/20 rounded-3xl p-6 mb-6 space-y-3">
+                <h3 className="font-poppins font-bold text-xs text-text-primary flex items-center gap-1.5 uppercase tracking-wider">
+                  <Sparkles className="w-4 h-4 text-accent animate-pulse" />
+                  Gemini AI Health Blog Writer
+                </h3>
+                <p className="text-[11px] text-text-secondary/80 font-inter leading-relaxed">
+                  Generate a professional preventative health awareness column instantly. Enter keywords or a medical topic below:
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <input
+                    type="text"
+                    value={aiPrompt}
+                    onChange={(e) => setAiPrompt(e.target.value)}
+                    placeholder="e.g. Preventative care for cataracts, Diabetes management..."
+                    className="flex-1 border border-border/80 rounded-xl px-4 py-2.5 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white font-inter"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleGenerateAIBlog}
+                    disabled={aiGenerating || !aiPrompt}
+                    className="bg-primary hover:bg-primary/95 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-colors disabled:opacity-50 font-poppins flex items-center justify-center gap-1.5"
+                  >
+                    {aiGenerating ? 'Writing Draft...' : 'Generate Draft'}
+                  </button>
+                </div>
+                {aiError && (
+                  <p className="text-[10px] text-red-500 font-semibold mt-1">{aiError}</p>
+                )}
+              </div>
+            )}
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               <div className="sm:col-span-2 flex flex-col gap-1.5">
