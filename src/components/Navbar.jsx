@@ -10,6 +10,7 @@ const navLinks = [
   { to: '/services', label: 'Services' },
   { to: '/monthly-camp', label: 'Monthly Camp' },
   { to: '/gallery', label: 'Gallery' },
+  { to: '/blog', label: 'Blog' },
   { to: '/volunteer', label: 'Volunteer' },
   { to: '/contact', label: 'Contact' },
 ];

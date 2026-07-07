@@ -16,6 +16,8 @@ const GalleryPage = lazy(() => import('./pages/GalleryPage'));
 const VolunteerPage = lazy(() => import('./pages/VolunteerPage'));
 const DonatePage = lazy(() => import('./pages/DonatePage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
+const Blogs = lazy(() => import('./pages/Blogs'));
+const BlogDetails = lazy(() => import('./pages/BlogDetails'));
 
 // Page transition wrapper
 const PageWrapper = ({ children }) => (
@@ -56,6 +58,8 @@ function AppRoutes() {
               <Route path="/services" element={<PageWrapper><ServicesPage /></PageWrapper>} />
               <Route path="/monthly-camp" element={<PageWrapper><MonthlyCampPage /></PageWrapper>} />
               <Route path="/gallery" element={<PageWrapper><GalleryPage /></PageWrapper>} />
+              <Route path="/blog" element={<PageWrapper><Blogs /></PageWrapper>} />
+              <Route path="/blog/:slug" element={<PageWrapper><BlogDetails /></PageWrapper>} />
               <Route path="/volunteer" element={<PageWrapper><VolunteerPage /></PageWrapper>} />
               <Route path="/donate" element={<PageWrapper><DonatePage /></PageWrapper>} />
               <Route path="/contact" element={<PageWrapper><ContactPage /></PageWrapper>} />
