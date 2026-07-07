@@ -258,7 +258,7 @@ export default function Gallery() {
                 onYearChange={setFilterYear}
                 activeMonth={filterMonth}
                 onMonthChange={setFilterMonth}
-                activeCategory={activeCategory}
+                activeCategory={filterCategory}
                 onCategoryChange={setFilterCategory}
               />
 
