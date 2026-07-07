@@ -333,7 +333,7 @@ export default function CampManager() {
                 >
                   <div className="flex flex-col gap-1.5">
                     <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider flex items-center gap-1">
-                      LinkedIn Draft Link
+                      LinkedIn Post Caption Draft
                     </label>
                     <textarea
                       value={campDetails.linkedinDraft}
@@ -345,7 +345,7 @@ export default function CampManager() {
 
                   <div className="flex flex-col gap-1.5">
                     <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider flex items-center gap-1">
-                      Instagram Draft Caption
+                      Instagram Post Caption Draft
                     </label>
                     <textarea
                       value={campDetails.instagramDraft}
