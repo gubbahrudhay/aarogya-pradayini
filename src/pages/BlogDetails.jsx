@@ -63,15 +63,19 @@ export default function BlogDetails() {
     .filter((x) => x.id !== item.id && x.type === item.type)
     .slice(0, 2);
 
+  // Share the OG API URL so social media crawlers get proper cover image previews
+  // The API page auto-redirects real users to the actual blog page
+  const shareUrl = `${window.location.origin}/api/og?slug=${item.slug}`;
+
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
         title: item.title,
         text: item.summary,
-        url: window.location.href
+        url: shareUrl
       }).catch((err) => console.log(err));
     } else {
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeText(shareUrl);
       alert('Link copied to clipboard!');
     }
   };
