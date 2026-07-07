@@ -12,6 +12,7 @@ import {
   LogOut,
   ArrowUpRight,
   ShieldCheck,
+  HeartHandshake,
   Menu,
   X
 } from 'lucide-react';
@@ -35,6 +36,7 @@ export default function AdminLayout() {
   const navItems = [
     { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { to: '/admin/camps', label: 'Medical Camps', icon: Calendar },
+    { to: '/admin/volunteers', label: 'Volunteer Signups', icon: HeartHandshake },
     { to: '/admin/gallery', label: 'Gallery', icon: Image },
     { to: '/admin/health-blogs', label: 'Health Blogs', icon: FileText },
     { to: '/admin/settings', label: 'Settings', icon: Settings },

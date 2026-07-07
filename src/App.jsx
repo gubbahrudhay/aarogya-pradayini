@@ -26,6 +26,7 @@ const AdminLayout = lazy(() => import('./admin/layouts/AdminLayout'));
 const Dashboard = lazy(() => import('./admin/pages/Dashboard'));
 const CampManager = lazy(() => import('./admin/pages/CampManager'));
 const GalleryManager = lazy(() => import('./admin/pages/GalleryManager'));
+const VolunteerManager = lazy(() => import('./admin/pages/VolunteerManager'));
 const BlogManager = lazy(() => import('./admin/pages/BlogManager'));
 const Settings = lazy(() => import('./admin/pages/Settings'));
 const UserManager = lazy(() => import('./admin/pages/UserManager'));
@@ -91,6 +92,7 @@ function AppRoutes() {
               >
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="camps" element={<CampManager />} />
+                <Route path="volunteers" element={<VolunteerManager />} />
                 <Route path="gallery" element={<GalleryManager />} />
                 <Route path="health-blogs" element={<BlogManager />} />
                 <Route path="settings" element={<Settings />} />

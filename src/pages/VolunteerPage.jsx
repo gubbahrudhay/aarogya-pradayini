@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import SEO from '../components/SEO';
 import { CheckCircle, Stethoscope, Clock, HeartHandshake, Users } from 'lucide-react';
+import { db, isMock } from '../admin/services/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } };
 
@@ -15,7 +17,38 @@ const roles = [
 export default function VolunteerPage() {
   const { register, handleSubmit, formState: { errors, isSubmitSuccessful }, reset } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    // Write to Firestore database / Mock storage
+    if (isMock) {
+      const mockListObj = localStorage.getItem('mock_volunteers');
+      const list = mockListObj ? JSON.parse(mockListObj) : [];
+      list.push({
+        id: Date.now().toString(),
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        role: data.role,
+        message: data.message || '',
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      });
+      localStorage.setItem('mock_volunteers', JSON.stringify(list));
+    } else {
+      try {
+        await addDoc(collection(db, 'volunteers'), {
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          role: data.role,
+          message: data.message || '',
+          status: 'pending',
+          createdAt: serverTimestamp()
+        });
+      } catch (err) {
+        console.error('Failed to sync volunteer record with Firestore:', err);
+      }
+    }
+
     const subject = encodeURIComponent(`Volunteer Registration - ${data.name}`);
     const body = encodeURIComponent(`Sri Satya Sai Aarogya Pradayini Volunteer Application:
 
