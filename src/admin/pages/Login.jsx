@@ -1,14 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, googleProvider, isMock, mockLogin } from '../services/firebase';
+import { useAuth } from '../contexts/AuthContext';
 import { signInWithPopup } from 'firebase/auth';
 import { ShieldCheck, AlertCircle, ArrowRight } from 'lucide-react';
 import logoImg from '../../assets/images/logo.jpg';
 
 export default function Login() {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/admin/dashboard', { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleGoogleLogin = async () => {
     setLoading(true);
