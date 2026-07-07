@@ -9,6 +9,7 @@ const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } };
 const team = [
   { name: 'Dr. Rajesh Gubba', initials: 'RG', color: 'from-blue-500 to-blue-700', role: 'Medical Specialist' },
   { name: 'Dr. Swamy', initials: 'DS', color: 'from-orange-500 to-orange-700', role: 'Medical Specialist' },
+  { name: 'Dr. Ramya Sree Gubba', initials: 'RG', color: 'from-violet-600 to-violet-800', role: 'Medical Specialist' },
   { name: 'Dr. Chandrakanth Chithanuri', initials: 'CC', color: 'from-red-500 to-red-700', role: 'Medical Specialist' },
   { name: 'Dr. Sai Charan Gubba', initials: 'SG', color: 'from-teal-500 to-teal-700', role: 'Medical Specialist' },
   { name: 'Dr. Chaitanya Kuppaganthu', initials: 'CK', color: 'from-purple-500 to-purple-700', role: 'Medical Specialist' },
@@ -33,7 +34,6 @@ const team = [
   { name: 'Dr. Rahul', initials: 'DR', color: 'from-emerald-600 to-emerald-800', role: 'Medical Specialist' },
   { name: 'Dr. Rakesh', initials: 'DR', color: 'from-cyan-600 to-cyan-800', role: 'Medical Specialist' },
   { name: 'Dr. Ram Das', initials: 'RD', color: 'from-sky-600 to-sky-800', role: 'Medical Specialist' },
-  { name: 'Dr. Ramya Sree Gubba', initials: 'RG', color: 'from-violet-600 to-violet-800', role: 'Medical Specialist' },
   { name: 'Dr. Ravi Shankar', initials: 'RS', color: 'from-rose-600 to-rose-800', role: 'Medical Specialist' },
   { name: 'Dr. Roja Sree Gaddam', initials: 'RG', color: 'from-fuchsia-600 to-fuchsia-800', role: 'Medical Specialist' },
   { name: 'Dr. Sagar', initials: 'DS', color: 'from-blue-500 to-blue-700', role: 'Medical Specialist' },

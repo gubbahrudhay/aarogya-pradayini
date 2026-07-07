@@ -41,7 +41,7 @@ export default function DonatePage() {
                 icon: Shield,
                 title: 'Trusted & Transparent',
                 desc: 'We publish full financial reports. Every rupee is accounted for.',
-                action: { label: 'View Financial Report', href: '#' }
+                action: { label: 'View Financial Report', href: 'https://docs.google.com/spreadsheets/d/1EbkL-2bzJ_vJjtToTV5E_oKdbQrmTVpDqhpWYPF-DpI/edit?usp=sharing' }
               },
               { icon: FileText, title: 'Tax Exemption', desc: 'Donations may be eligible for tax benefits under Section 80G (consult your CA).' },
               { icon: Heart, title: '100% To Patients', desc: 'No administrative fees deducted. Every donation reaches patients directly.' },

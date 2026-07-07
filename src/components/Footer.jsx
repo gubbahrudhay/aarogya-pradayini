@@ -13,6 +13,7 @@ const quickLinks = [
 const supportLinks = [
   { to: '/volunteer', label: 'Volunteer With Us' },
   { to: '/donate', label: 'Donate' },
+  { href: 'https://docs.google.com/spreadsheets/d/1EbkL-2bzJ_vJjtToTV5E_oKdbQrmTVpDqhpWYPF-DpI/edit?usp=sharing', label: 'Financial Report', isExternal: true },
   { to: '/contact', label: 'Contact Us' },
 ];
 
@@ -120,14 +121,26 @@ export default function Footer() {
                 </li>
               ))}
               {supportLinks.map((link) => (
-                <li key={link.to}>
-                  <Link
-                    to={link.to}
-                    className="text-white/70 hover:text-accent text-sm font-inter transition-colors duration-300 flex items-center gap-2 group"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-accent/60 group-hover:bg-accent transition-colors" />
-                    {link.label}
-                  </Link>
+                <li key={link.label}>
+                  {link.isExternal ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white/70 hover:text-accent text-sm font-inter transition-colors duration-300 flex items-center gap-2 group"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent/60 group-hover:bg-accent transition-colors" />
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      to={link.to}
+                      className="text-white/70 hover:text-accent text-sm font-inter transition-colors duration-300 flex items-center gap-2 group"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent/60 group-hover:bg-accent transition-colors" />
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
