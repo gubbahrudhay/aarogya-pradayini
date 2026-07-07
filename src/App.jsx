@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import FloatingDonateButton from './components/FloatingDonateButton';
+import { AuthProvider } from './admin/contexts/AuthContext';
 
 // Lazy-loaded pages
 const Home = lazy(() => import('./pages/Home'));
@@ -18,6 +19,17 @@ const DonatePage = lazy(() => import('./pages/DonatePage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const Blogs = lazy(() => import('./pages/Blogs'));
 const BlogDetails = lazy(() => import('./pages/BlogDetails'));
+
+// Admin Lazy Pages
+const Login = lazy(() => import('./admin/pages/Login'));
+const AdminLayout = lazy(() => import('./admin/layouts/AdminLayout'));
+const Dashboard = lazy(() => import('./admin/pages/Dashboard'));
+const CampManager = lazy(() => import('./admin/pages/CampManager'));
+const GalleryManager = lazy(() => import('./admin/pages/GalleryManager'));
+const BlogManager = lazy(() => import('./admin/pages/BlogManager'));
+const Settings = lazy(() => import('./admin/pages/Settings'));
+const UserManager = lazy(() => import('./admin/pages/UserManager'));
+const ProtectedRoute = lazy(() => import('./admin/components/ProtectedRoute'));
 
 // Page transition wrapper
 const PageWrapper = ({ children }) => (
@@ -44,15 +56,18 @@ const PageLoader = () => (
 // App Router (needs to be inside BrowserRouter to use useLocation)
 function AppRoutes() {
   const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin');
+
   return (
     <>
       <ScrollToTop />
-      <Navbar />
-      <FloatingDonateButton />
-      <main>
+      {!isAdmin && <Navbar />}
+      {!isAdmin && <FloatingDonateButton />}
+      <main className={isAdmin ? 'bg-bg' : ''}>
         <Suspense fallback={<PageLoader />}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
+              {/* Public Routes */}
               <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
               <Route path="/about" element={<PageWrapper><AboutPage /></PageWrapper>} />
               <Route path="/services" element={<PageWrapper><ServicesPage /></PageWrapper>} />
@@ -63,11 +78,36 @@ function AppRoutes() {
               <Route path="/volunteer" element={<PageWrapper><VolunteerPage /></PageWrapper>} />
               <Route path="/donate" element={<PageWrapper><DonatePage /></PageWrapper>} />
               <Route path="/contact" element={<PageWrapper><ContactPage /></PageWrapper>} />
+
+              {/* Admin Routes */}
+              <Route path="/admin/login" element={<PageWrapper><Login /></PageWrapper>} />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="camps" element={<CampManager />} />
+                <Route path="gallery" element={<GalleryManager />} />
+                <Route path="health-blogs" element={<BlogManager />} />
+                <Route path="settings" element={<Settings />} />
+                <Route
+                  path="users"
+                  element={
+                    <ProtectedRoute allowedRoles={['super-admin']}>
+                      <UserManager />
+                    </ProtectedRoute>
+                  }
+                />
+              </Route>
             </Routes>
           </AnimatePresence>
         </Suspense>
       </main>
-      <Footer />
+      {!isAdmin && <Footer />}
     </>
   );
 }
@@ -75,9 +115,11 @@ function AppRoutes() {
 export default function App() {
   return (
     <HelmetProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </AuthProvider>
     </HelmetProvider>
   );
 }
