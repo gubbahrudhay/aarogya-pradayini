@@ -290,9 +290,18 @@ export default function GalleryManager() {
                   onChange={(e) => setNewImageMeta({ ...newImageMeta, month: e.target.value })}
                   className="border border-border rounded-xl px-3 py-2 text-xs bg-white text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter"
                 >
-                  <option value="June">June</option>
-                  <option value="May">May</option>
+                  <option value="January">January</option>
+                  <option value="February">February</option>
+                  <option value="March">March</option>
                   <option value="April">April</option>
+                  <option value="May">May</option>
+                  <option value="June">June</option>
+                  <option value="July">July</option>
+                  <option value="August">August</option>
+                  <option value="September">September</option>
+                  <option value="October">October</option>
+                  <option value="November">November</option>
+                  <option value="December">December</option>
                 </select>
               </div>
             </div>

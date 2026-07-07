@@ -20,7 +20,21 @@ export default function GalleryFilters({
   ];
 
   const years = ['All', '2026', '2025', '2024'];
-  const months = ['All', 'June', 'May', 'April', 'December', 'November', 'September', 'October'];
+  const months = [
+    'All',
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
 
   return (
     <div className="space-y-6">
