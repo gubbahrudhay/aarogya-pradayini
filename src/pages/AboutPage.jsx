@@ -26,7 +26,6 @@ const team = [
   { name: 'Dr. Navaneetha', initials: 'DN', color: 'from-orange-600 to-orange-800', role: 'Medical Specialist' },
   { name: 'Dr. Naveen', initials: 'DN', color: 'from-red-600 to-red-800', role: 'Medical Specialist' },
   { name: 'Dr. Poojitha', initials: 'DP', color: 'from-teal-600 to-teal-800', role: 'Medical Specialist' },
-  { name: 'Dr. Pravalika Alladi', initials: 'PA', color: 'from-purple-600 to-purple-800', role: 'Medical Specialist' },
   { name: 'Dr. Pravalika Gubba', initials: 'PG', color: 'from-green-600 to-green-800', role: 'Medical Specialist' },
   { name: 'Dr. Pravalika Reddy', initials: 'PR', color: 'from-indigo-600 to-indigo-800', role: 'Medical Specialist' },
   { name: 'Dr. Pullayya', initials: 'DP', color: 'from-pink-600 to-pink-800', role: 'Medical Specialist' },
