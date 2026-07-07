@@ -27,9 +27,9 @@ export default function Dashboard() {
   const { user, role } = useAuth();
 
   const stats = [
-    { label: 'Total Camps', value: '36', icon: Calendar, color: 'text-primary', bg: 'bg-blue-50' },
-    { label: 'Draft Reports', value: '2', icon: FileText, color: 'text-accent', bg: 'bg-orange-50' },
-    { label: 'Published Reports', value: '34', icon: FileText, color: 'text-primary', bg: 'bg-blue-50' },
+    { label: 'Total Camps', value: '53', icon: Calendar, color: 'text-primary', bg: 'bg-blue-50' },
+    { label: 'Draft Reports', value: '0', icon: FileText, color: 'text-accent', bg: 'bg-orange-50' },
+    { label: 'Published Reports', value: '0', icon: FileText, color: 'text-primary', bg: 'bg-blue-50' },
     { label: 'Health Blogs', value: '5', icon: FileText, color: 'text-accent', bg: 'bg-orange-50' },
     { label: 'Gallery Photos', value: '9', icon: Image, color: 'text-primary', bg: 'bg-blue-50' },
     { label: 'Unread Messages', value: '1', icon: Mail, color: 'text-accent', bg: 'bg-orange-50' }

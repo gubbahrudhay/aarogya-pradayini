@@ -3,7 +3,7 @@ import { Users, Calendar, Image, Video } from 'lucide-react';
 
 const stats = [
   { icon: Users, value: '10,000+', label: 'Patients Served', color: 'text-primary', bg: 'bg-blue-50' },
-  { icon: Calendar, value: '36+', label: 'Medical Camps Completed', color: 'text-accent', bg: 'bg-orange-50' },
+  { icon: Calendar, value: '53+', label: 'Medical Camps Completed', color: 'text-accent', bg: 'bg-orange-50' },
   { icon: Image, value: '500+', label: 'Camp Photos Archived', color: 'text-primary', bg: 'bg-blue-50' },
   { icon: Video, value: '120+', label: 'Video Documentaries', color: 'text-accent', bg: 'bg-orange-50' }
 ];
