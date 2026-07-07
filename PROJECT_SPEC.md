@@ -258,7 +258,7 @@ Generate AI
 
 # AI Processing
 
-OpenAI should automatically
+Gemini should automatically
 
 Extract
 
@@ -275,7 +275,6 @@ Extract
 * Villages Covered
 * Volunteers
 * Medicines
-* Prasadam
 
 Generate
 

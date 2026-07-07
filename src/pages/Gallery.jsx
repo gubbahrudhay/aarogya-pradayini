@@ -1,8 +1,8 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
-import { collections, photos, videos } from '../data/gallery';
+import { collections, photos as staticPhotos, videos } from '../data/gallery';
 import GalleryHero from '../components/GalleryHero';
 import CollectionCard from '../components/CollectionCard';
 import PhotoGrid from '../components/PhotoGrid';
@@ -10,6 +10,8 @@ import VideoGrid from '../components/VideoGrid';
 import GalleryFilters from '../components/GalleryFilters';
 import VideoModal from '../components/VideoModal';
 import StatsSection from '../components/StatsSection';
+import { db, isMock } from '../admin/services/firebase';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { Image, Video, Users2, Calendar, FileImage, FileVideo, ArrowRight, Heart } from 'lucide-react';
 
 const fadeUp = {
@@ -23,19 +25,44 @@ export default function Gallery() {
   const [filterMonth, setFilterMonth] = useState('All');
   const [filterCategory, setFilterCategory] = useState('All');
   const [activeVideoUrl, setActiveVideoUrl] = useState(null);
+  const [allPhotos, setAllPhotos] = useState(staticPhotos);
+
+  useEffect(() => {
+    if (!isMock) {
+      const fetchDbPhotos = async () => {
+        try {
+          const q = query(collection(db, 'gallery'), orderBy('createdAt', 'desc'));
+          const querySnapshot = await getDocs(q);
+          const list = [];
+          querySnapshot.forEach((docSnap) => {
+            list.push({ id: docSnap.id, ...docSnap.data() });
+          });
+          setAllPhotos([...list, ...staticPhotos]);
+        } catch (err) {
+          console.error('Error loading gallery DB photos:', err);
+        }
+      };
+      fetchDbPhotos();
+    } else {
+      const savedMock = localStorage.getItem('mock_gallery_photos');
+      if (savedMock) {
+        setAllPhotos(JSON.parse(savedMock));
+      }
+    }
+  }, []);
 
   // Featured Collection is always the first collection (latest)
   const featuredCollection = collections[0];
 
   // Apply filters to photos
   const filteredPhotos = useMemo(() => {
-    return photos.filter((p) => {
+    return allPhotos.filter((p) => {
       const matchYear = filterYear === 'All' || p.year === filterYear;
       const matchMonth = filterMonth === 'All' || p.month === filterMonth;
       const matchCategory = filterCategory === 'All' || p.category === filterCategory;
       return matchYear && matchMonth && matchCategory;
     });
-  }, [filterYear, filterMonth, filterCategory]);
+  }, [allPhotos, filterYear, filterMonth, filterCategory]);
 
   // Apply filters to videos
   const filteredVideos = useMemo(() => {

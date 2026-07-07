@@ -1,18 +1,52 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { UploadCloud, CheckCircle, Database, GitBranch, Trash2, Calendar, FileImage } from 'lucide-react';
+import { db, isMock } from '../services/firebase';
+import { collection, getDocs, addDoc, doc, deleteDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
+import { compressAndConvertToWebP } from '../utils/imageCompressor';
 import { photos as initialPhotos } from '../../data/gallery';
 
 export default function GalleryManager() {
-  const [photos, setPhotos] = useState(initialPhotos);
+  const [photos, setPhotos] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const [newImageMeta, setNewImageMeta] = useState({
     alt: '',
     category: 'General Camp',
     month: 'June',
     year: '2026'
   });
+
+  useEffect(() => {
+    fetchPhotos();
+  }, []);
+
+  const fetchPhotos = async () => {
+    if (isMock) {
+      const savedMock = localStorage.getItem('mock_gallery_photos');
+      if (savedMock) {
+        setPhotos(JSON.parse(savedMock));
+      } else {
+        setPhotos(initialPhotos);
+        localStorage.setItem('mock_gallery_photos', JSON.stringify(initialPhotos));
+      }
+    } else {
+      try {
+        const q = query(collection(db, 'gallery'), orderBy('createdAt', 'desc'));
+        const querySnapshot = await getDocs(q);
+        const list = [];
+        querySnapshot.forEach((docSnap) => {
+          list.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        // Append static initial photos at the end as fallback
+        setPhotos([...list, ...initialPhotos]);
+      } catch (err) {
+        console.error('Error fetching gallery database index:', err);
+        setPhotos(initialPhotos);
+      }
+    }
+  };
 
   const handleFileChange = (e) => {
     if (e.target.files) {
@@ -25,37 +59,113 @@ export default function GalleryManager() {
     if (fileInput) fileInput.click();
   };
 
-  const handleUploadSimulate = (e) => {
+  const handleUpload = async (e) => {
     e.preventDefault();
     if (selectedFiles.length === 0 || !newImageMeta.alt) return;
 
     setUploading(true);
     setSuccessMsg('');
+    setErrorMsg('');
 
-    // Simulate backend upload: compress -> webp conversion -> commit to GitHub -> firestore sync
-    setTimeout(() => {
-      const newUploadedPhotos = selectedFiles.map((file, index) => {
-        return {
-          id: Date.now() + index,
-          src: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=600',
+    try {
+      const uploadedList = [];
+
+      for (let index = 0; index < selectedFiles.length; index++) {
+        const file = selectedFiles[index];
+        
+        // 1. Compress image to highly optimized WebP format client-side
+        const base64WebP = await compressAndConvertToWebP(file);
+        const cleanNameLabel = newImageMeta.alt.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+        const filename = `${cleanNameLabel}_${Date.now()}_${index + 1}.webp`;
+
+        let imageUrl = '';
+
+        if (isMock) {
+          // Mock mode: use the compressed base64 local preview
+          imageUrl = base64WebP;
+        } else {
+          // 2. Commit compressed image base64 directly to GitHub repository via serverless API
+          const response = await fetch('/api/upload', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              fileContent: base64WebP,
+              filename,
+              month: newImageMeta.month,
+              year: newImageMeta.year
+            })
+          });
+
+          const result = await response.json();
+          if (!response.ok) {
+            throw new Error(result.error || 'Failed to upload image to GitHub repository');
+          }
+          imageUrl = result.url; // Git Raw / CDN URL returned
+        }
+
+        // 3. Save reference metadata object in Cloud Firestore
+        const photoRecord = {
+          src: imageUrl,
           alt: `${newImageMeta.alt} - Photo ${index + 1}`,
           category: newImageMeta.category,
           month: newImageMeta.month,
-          year: newImageMeta.year
+          year: newImageMeta.year,
+          createdAt: isMock ? new Date().toISOString() : serverTimestamp()
         };
-      });
 
-      setPhotos([...newUploadedPhotos, ...photos]);
-      setUploading(false);
-      setSuccessMsg(`Successfully compressed, committed ${selectedFiles.length} images to GitHub under "${newImageMeta.alt}", and indexed reference metadata in Firestore!`);
+        if (isMock) {
+          uploadedList.push({ id: `mock-img-${Date.now()}-${index}`, ...photoRecord });
+        } else {
+          const docRef = await addDoc(collection(db, 'gallery'), photoRecord);
+          uploadedList.push({ id: docRef.id, ...photoRecord });
+        }
+      }
+
+      const updatedPhotos = [...uploadedList, ...photos];
+      if (isMock) {
+        localStorage.setItem('mock_gallery_photos', JSON.stringify(updatedPhotos));
+      }
+      
+      setPhotos(updatedPhotos);
+      setSuccessMsg(
+        isMock
+          ? `[Mock Sandbox] Successfully compressed and registered ${selectedFiles.length} photos!`
+          : `Successfully compressed, committed ${selectedFiles.length} images to GitHub repo, and indexed in Firestore database!`
+      );
       setSelectedFiles([]);
       setNewImageMeta({ alt: '', category: 'General Camp', month: 'June', year: '2026' });
-    }, 2000);
+    } catch (err) {
+      console.error(err);
+      setErrorMsg(err.message || 'An error occurred during file upload.');
+    } finally {
+      setUploading(false);
+    }
   };
 
-  const handleDelete = (id) => {
-    setPhotos(photos.filter(p => p.id !== id));
-    setSuccessMsg('Image indexed reference removed from Firestore.');
+  const handleDelete = async (item) => {
+    if (!window.confirm('Are you sure you want to remove this photo?')) return;
+    setSuccessMsg('');
+    setErrorMsg('');
+
+    if (isMock) {
+      const updated = photos.filter(p => p.id !== item.id);
+      localStorage.setItem('mock_gallery_photos', JSON.stringify(updated));
+      setPhotos(updated);
+      setSuccessMsg('Photo reference removed from local mock database.');
+    } else {
+      try {
+        if (typeof item.id === 'string' && !item.id.startsWith('mock')) {
+          await deleteDoc(doc(db, 'gallery', item.id));
+        }
+        setPhotos(photos.filter(p => p.id !== item.id));
+        setSuccessMsg('Photo index reference successfully deleted from Firestore.');
+      } catch (err) {
+        console.error('Delete error:', err);
+        setErrorMsg('Failed to delete photo index from Firestore.');
+      }
+    }
   };
 
   return (
@@ -66,7 +176,7 @@ export default function GalleryManager() {
           GitHub Image Repository Sync
         </h1>
         <p className="text-xs text-text-secondary">
-          Upload camp photos securely. Files are automatically converted to WebP format, resized, committed directly to your GitHub repo, and indexed in Firestore.
+          Upload camp photos securely. Files are automatically compressed client-side, converted to WebP format, committed directly to your GitHub repo, and indexed in Firestore.
         </p>
       </div>
 
@@ -77,9 +187,15 @@ export default function GalleryManager() {
         </div>
       )}
 
+      {errorMsg && (
+        <div className="flex items-center gap-3 bg-red-50 border border-red-100 text-red-700 px-4 py-3.5 rounded-2xl">
+          <span className="text-xs font-semibold leading-none">{errorMsg}</span>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left: Drag Drop Simulation */}
-        <form onSubmit={handleUploadSimulate} className="lg:col-span-5 bg-white border border-border rounded-3xl p-6 shadow-sm space-y-4">
+        <form onSubmit={handleUpload} className="lg:col-span-5 bg-white border border-border rounded-3xl p-6 shadow-sm space-y-4">
           <h2 className="font-poppins font-bold text-base text-text-primary flex items-center gap-2">
             <UploadCloud className="w-5 h-5 text-primary" />
             Upload Camp Photos
@@ -219,7 +335,8 @@ export default function GalleryManager() {
                       {ph.month} {ph.year}
                     </span>
                     <button
-                      onClick={() => handleDelete(ph.id)}
+                      type="button"
+                      onClick={() => handleDelete(ph)}
                       className="p-1.5 text-text-secondary/40 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors"
                       aria-label="Remove image link"
                     >
