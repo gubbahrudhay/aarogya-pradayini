@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import { getYoutubeEmbedUrl } from '../utils/youtube';
 
 export default function VideoModal({ videoUrl, onClose }) {
   if (!videoUrl) return null;
@@ -35,7 +36,7 @@ export default function VideoModal({ videoUrl, onClose }) {
 
           {/* Video Player */}
           <iframe
-            src={videoUrl}
+            src={getYoutubeEmbedUrl(videoUrl)}
             title="Camp Video Player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen

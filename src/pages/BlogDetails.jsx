@@ -5,6 +5,7 @@ import { blogs } from '../data/blogs';
 import { campReports } from '../data/campReports';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 import 'react-photo-view/dist/react-photo-view.css';
+import { getYoutubeEmbedUrl } from '../utils/youtube';
 import {
   ArrowLeft,
   Calendar,
@@ -249,7 +250,7 @@ export default function BlogDetails() {
                       </h2>
                       <div className="rounded-2xl overflow-hidden shadow-md border border-border relative aspect-video">
                         <iframe
-                          src={item.videoUrl}
+                          src={getYoutubeEmbedUrl(item.videoUrl)}
                           title="Monthly Camp Highlight Video"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                           allowFullScreen

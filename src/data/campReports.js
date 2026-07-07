@@ -48,7 +48,7 @@ export const campReports = [
       }
     ],
     gallery: [imgEye, imgConsultation, imgVital, imgLab, imgMedicine, imgTeam],
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' // Standard youtube placeholder or embed frame
+    videoUrl: 'https://youtube.com/shorts/4VJeRkI9Qvs?feature=share' // Standard youtube placeholder or embed frame
   },
   {
     id: 'camp-may-2026',

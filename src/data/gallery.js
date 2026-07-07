@@ -130,7 +130,7 @@ export const videos = [
     duration: '3:45',
     date: 'June 14, 2026',
     description: 'Visual recap of our June monthly camp highlights, patients served, and volunteer activities in Kalwakurthy.',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+    videoUrl: 'https://youtube.com/shorts/4VJeRkI9Qvs?feature=share'
   },
   {
     id: 'vid-2',
@@ -139,7 +139,7 @@ export const videos = [
     duration: '5:12',
     date: 'May 10, 2026',
     description: 'Hear from our senior patients who received free cataract micro-surgeries and had their eyesight fully restored.',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+    videoUrl: 'https://youtube.com/shorts/4VJeRkI9Qvs?feature=share'
   },
   {
     id: 'vid-3',
@@ -148,6 +148,6 @@ export const videos = [
     duration: '2:30',
     date: 'April 12, 2026',
     description: 'A tribute to our passionate medical volunteers and Sevadal members managing the logisitics of the camp.',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+    videoUrl: 'https://youtube.com/shorts/4VJeRkI9Qvs?feature=share'
   }
 ];

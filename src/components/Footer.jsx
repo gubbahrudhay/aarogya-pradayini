@@ -93,7 +93,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://youtube.com"
+                href="https://www.youtube.com/channel/UC-mqTrLYxMEadwq6tiiQ1Jg"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="YouTube"
