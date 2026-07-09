@@ -5,6 +5,28 @@
       "destination": "/api/:path*"
     },
     {
+      "source": "/volunteer",
+      "has": [
+        {
+          "type": "header",
+          "key": "User-Agent",
+          "value": "(?i).*(facebookexternalhit|twitterbot|whatsapp|linkedinbot|telegrambot|slackbot|discordbot|pinterest).*"
+        }
+      ],
+      "destination": "/api/og?page=volunteer"
+    },
+    {
+      "source": "/blog/:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "User-Agent",
+          "value": "(?i).*(facebookexternalhit|twitterbot|whatsapp|linkedinbot|telegrambot|slackbot|discordbot|pinterest).*"
+        }
+      ],
+      "destination": "/api/og?slug=:slug"
+    },
+    {
       "source": "/((?!api/).*)",
       "destination": "/index.html"
     }

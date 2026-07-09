@@ -48,23 +48,47 @@ const blogMeta = {
   }
 };
 
-export default function handler(req, res) {
-  const { slug } = req.query;
-
-  if (!slug) {
-    return res.status(400).json({ error: 'Missing slug parameter' });
+// Map of page names to their OG metadata
+const pageMeta = {
+  'volunteer': {
+    title: 'Volunteer | Sri Satya Sai Aarogya Pradayini',
+    description: 'Join our team of volunteers and make a real difference. Doctors, nurses, students, and general helpers are welcome at our monthly medical camps.',
+    image: '/og/volunteer.jpeg',
+    path: '/volunteer'
   }
+};
 
-  const meta = blogMeta[slug];
+export default function handler(req, res) {
+  const { slug, page } = req.query;
+
+  let meta = null;
+  let pageUrl = '';
+  let fullTitle = '';
+  let imageUrl = '';
+  let ogType = 'article';
+
+  if (page && pageMeta[page]) {
+    meta = pageMeta[page];
+    fullTitle = meta.title;
+    imageUrl = `${SITE_URL}${meta.image}`;
+    pageUrl = `${SITE_URL}${meta.path}`;
+    ogType = 'website';
+  } else if (slug && blogMeta[slug]) {
+    meta = blogMeta[slug];
+    fullTitle = `${meta.title} | Sri Satya Sai Aarogya Pradayini`;
+    imageUrl = `${SITE_URL}${meta.image}`;
+    pageUrl = `${SITE_URL}/blog/${slug}`;
+    ogType = 'article';
+  }
 
   if (!meta) {
-    // Fallback: redirect to the actual blog page
-    return res.redirect(302, `${SITE_URL}/blog/${slug}`);
+    // If it's a slug, fallback to redirect to the actual blog page
+    if (slug) {
+      return res.redirect(302, `${SITE_URL}/blog/${slug}`);
+    }
+    // General fallback
+    return res.redirect(302, SITE_URL);
   }
-
-  const fullTitle = `${meta.title} | Sri Satya Sai Aarogya Pradayini`;
-  const imageUrl = `${SITE_URL}${meta.image}`;
-  const pageUrl = `${SITE_URL}/blog/${slug}`;
 
   // Return HTML with proper OG tags + instant redirect for real users
   const html = `<!DOCTYPE html>
@@ -81,7 +105,7 @@ export default function handler(req, res) {
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:url" content="${pageUrl}" />
-  <meta property="og:type" content="article" />
+  <meta property="og:type" content="${ogType}" />
   <meta property="og:site_name" content="Sri Satya Sai Aarogya Pradayini" />
 
   <!-- Twitter -->
@@ -95,7 +119,7 @@ export default function handler(req, res) {
   <link rel="canonical" href="${pageUrl}" />
 </head>
 <body>
-  <p>Redirecting to <a href="${pageUrl}">${meta.title}</a>...</p>
+  <p>Redirecting to <a href="${pageUrl}">${meta.title || 'the page'}</a>...</p>
 </body>
 </html>`;
 

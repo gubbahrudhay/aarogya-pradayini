@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import SEO from '../components/SEO';
 import { CheckCircle, Stethoscope, Clock, HeartHandshake, Users } from 'lucide-react';
+import volunteerOgImage from '../assets/images/WhatsApp Image Jul 10 2026.jpeg';
 import { db, isMock } from '../admin/services/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
@@ -68,6 +69,7 @@ ${data.message || 'N/A'}`);
       <SEO
         title="Volunteer | Sri Satya Sai Aarogya Pradayini"
         description="Join our team of volunteers and make a real difference. Doctors, nurses, students, and general helpers are welcome at our monthly medical camps."
+        image={volunteerOgImage}
       />
       {/* Hero */}
       <section className="pt-32 pb-20 bg-gradient-to-br from-accent via-orange-500 to-warm text-white">
