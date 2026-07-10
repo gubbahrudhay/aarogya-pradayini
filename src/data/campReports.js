@@ -202,5 +202,81 @@ export const campReports = [
       imgTeam
     ],
     "videoUrl": "https://youtube.com/shorts/4VJeRkI9Qvs?feature=share"
+  },
+  {
+    "id": "camp-april-2026",
+    "slug": "april-2026-free-medical-camp",
+    "type": "camp-report",
+    "title": "April 2026 Free Medical Camp",
+    "month": "April 2026",
+    "date": "April 12, 2026",
+    "location": "Sai Baba Temple Altar, Kalwakurthy",
+    "coverImage": imgDoctor,
+    "patientsServed": 436,
+    "summary": "April’s monthly camp focused on diabetes awareness and vision care. Over 200 patients underwent comprehensive blood tests, enabling early diagnosis of metabolic health issues.",
+    "stats": [
+      {
+        "label": "General Medicine",
+        "value": 240
+      },
+      {
+        "label": "Cardiology",
+        "value": 30
+      },
+      {
+        "label": "Eye Screening",
+        "value": 130
+      },
+      {
+        "label": "Cataract Surgery Registered",
+        "value": 14
+      },
+      {
+        "label": "Blood Sugar Tests",
+        "value": 210
+      },
+      {
+        "label": "BP Checks",
+        "value": 275
+      }
+    ],
+    "doctors": [
+      {
+        "name": "Dr. Chaitanya Kuppaganthu",
+        "role": "General Medicine"
+      },
+      {
+        "name": "Dr. Krishna Veeramalla",
+        "role": "General Medicine"
+      },
+      {
+        "name": "Dr. Sridhar",
+        "role": "Eye Specialist"
+      },
+      {
+        "name": "Dr. Vidya Sagar",
+        "role": "General Medicine"
+      }
+    ],
+    "highlights": [
+      "14 successful cataract surgery candidates screened and scheduled for free procedures.",
+      "Specialized dental health consultation booth added for local village school children.",
+      "Conducted live demonstration on food nutrition and correct dietary routines for healthy blood sugar."
+    ],
+    "testimonials": [
+      {
+        "quote": "The doctor explained how to control my diabetes with food and walks, not just tablets. I feel much healthier now.",
+        "author": "Mallesh, patient from neighboring village"
+      }
+    ],
+    "gallery": [
+      imgRegistration,
+      imgConsultation,
+      imgEye,
+      imgLab,
+      imgMedicine,
+      imgTeam
+    ],
+    "videoUrl": ""
   }
 ];
