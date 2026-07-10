@@ -13,7 +13,7 @@ export const campReports = [
     "id": "camp-sri-sathya-sai-free-medical-camp",
     "slug": "sri-sathya-sai-free-medical-camp",
     "type": "camp-report",
-    "title": "Sri Sathya Sai Free Medical Camp",
+    "title": "May 2026 Free Medical Camp",
     "month": "May 2026",
     "date": "May 10, 2026",
     "location": "Kalwakurthy",
@@ -76,7 +76,7 @@ export const campReports = [
         "role": "Medical Specialist"
       },
       {
-        "name": "and Dr. Sridhar (Eye specialist)",
+        "name": "Dr. Sridhar (Eye specialist)",
         "role": "Medical Specialist"
       }
     ],
@@ -103,7 +103,7 @@ export const campReports = [
     "status": "published",
     "rawReport": "*🌹Om Sri Sai Ram🌹*\n*Sri Sathya Sai Aarogya Pradayini *\n*Sri Sathya Sai Free Medical Camp*\n*51 Medical Camp - 10th May 2026 (Every 2nd Sunday)*\nLoving Sairam! \nWith Bhagawan Baba’s blessings conducted 51 Free Medical Camp at Kalwakurthy, Nagarkurnool Dist, Telangana\n1. 10-05-2026 Sri Sathya Sai Aarogya Pradayini free Medical camp was conducted at Kalwakurthy. Started with Omkaram at 8.15am\n2. A Total of 442*( 152 male +  290 female)* patients availed the camp including the eye camp. 18 cataract cases have been registered for surgeries.\n3.  1. Dr. Rajesh Gubba \n     2. Dr. Vidya sagar\n     3. Dr. Naveen\n    4. Dr. Harish\n    5. Dr. Chandrakanth \n    6. Dr. Manoj kumar \n    7. Dr. Navaneetha and \n    8. Dr. Sridhar (Eye specialist ) examined and prescribed the medicines.\n4.  Total 74 villages covered. \n5.  We have done 252 Sugar tests (GRBS) and 386 BP tests\n6. Given medicines for one month BP & Sugar patients and for others patients  week medicines.\n7. 42 Spects distributed and 18 cataract cases have been registered for surgeries.\n8. 21 members of Sevadal participated in the Camp from Kalwakurthy Samithi.\n9. Bhagawan Prasadam ( Full meals) provided to all. The camp closed at 3.15pm\n-Team, Sri Sathya Sai Seva Samithi,\n *Kalwakurthy* , Nagarkurnool Dist, Telangana.",
     "editorFields": {
-      "title": "Sri Sathya Sai Free Medical Camp",
+      "title": "May 2026 Free Medical Camp",
       "date": "2026-05-10",
       "location": "Kalwakurthy",
       "status": "draft",
@@ -115,7 +115,7 @@ export const campReports = [
       "sugarTests": 252,
       "cataracts": 18,
       "volunteers": 21,
-      "doctorsText": "Dr. Rajesh Gubba, Dr. Vidya Sagar, Dr. Naveen, Dr. Harish, Dr. Chandrakanth, Dr. Manoj Kumar, Dr. Navaneetha, and Dr. Sridhar (Eye specialist)",
+      "doctorsText": "Dr. Rajesh Gubba, Dr. Vidya Sagar, Dr. Naveen, Dr. Harish, Dr. Chandrakanth, Dr. Manoj Kumar, Dr. Navaneetha, Dr. Sridhar (Eye specialist)",
       "summaryText": "The 51st Sri Sathya Sai Free Medical Camp, held on May 10, 2026, in Kalwakurthy, Nagarkurnool Dist, Telangana, successfully provided vital healthcare services to 442 patients from 74 villages. The camp included comprehensive screenings with 252 sugar tests and 386 BP tests, along with distributing essential medicines. A dedicated team of 8 doctors and 21 volunteers facilitated the camp, which also identified 18 cataract cases for surgery, demonstrating a significant community health impact.",
       "linkedinDraft": "Proud to share the incredible impact of the 51st Sri Sathya Sai Free Medical Camp held on May 10, 2026, in Kalwakurthy, Telangana!\n\nWe served a total of 442 patients (152 male, 290 female) from 74 villages, conducting 252 sugar tests and 386 BP tests. We also distributed 42 spectacles and registered 18 cataract cases for surgeries, providing crucial eye care.\n\nA special thank you to our dedicated team of 8 doctors: Dr. Rajesh Gubba, Dr. Vidya Sagar, Dr. Naveen, Dr. Harish, Dr. Chandrakanth, Dr. Manoj Kumar, Dr. Navaneetha, and Dr. Sridhar (Eye specialist), for their invaluable service. Our 21 Sevadal volunteers also played a crucial role in making this camp a success, ensuring smooth operations and providing full meals.\n\nTogether, we are making a significant difference in community health. #MedicalCamp #FreeHealthcare #CommunityService #SriSathyaSai #Telangana #HealthcareHeroes",
       "instagramDraft": "🌟 What an inspiring day at the 51st Sri Sathya Sai Free Medical Camp on May 10, 2026! 🌟\n\n📍 Kalwakurthy, Telangana came alive with compassion as we served 442 patients from 74 villages! ❤️\n\nNumbers that speak volumes:\n👨‍👩‍👧‍👦 442 patients served (152 male + 290 female)\n🩸 252 Sugar Tests & 386 BP Tests conducted\n👁️ 18 Cataract cases identified for surgery & 42 Spectacles distributed\n\nThank you to our amazing 8 doctors and 21 dedicated Sevadal volunteers who made this possible! 🙏 Your selfless service brings health and hope to so many.\n\n#FreeMedicalCamp #CommunityHealth #Seva #SriSathyaSai #HealthcareHeroes #Kalwakurthy #Telangana #Impact #MedicalCare",
@@ -202,81 +202,5 @@ export const campReports = [
       imgTeam
     ],
     "videoUrl": "https://youtube.com/shorts/4VJeRkI9Qvs?feature=share"
-  },
-  {
-    "id": "camp-april-2026",
-    "slug": "april-2026-free-medical-camp",
-    "type": "camp-report",
-    "title": "April 2026 Free Medical Camp",
-    "month": "April 2026",
-    "date": "April 12, 2026",
-    "location": "Sai Baba Temple Altar, Kalwakurthy",
-    "coverImage": imgDoctor,
-    "patientsServed": 436,
-    "summary": "April’s monthly camp focused on diabetes awareness and vision care. Over 200 patients underwent comprehensive blood tests, enabling early diagnosis of metabolic health issues.",
-    "stats": [
-      {
-        "label": "General Medicine",
-        "value": 240
-      },
-      {
-        "label": "Cardiology",
-        "value": 30
-      },
-      {
-        "label": "Eye Screening",
-        "value": 130
-      },
-      {
-        "label": "Cataract Surgery Registered",
-        "value": 14
-      },
-      {
-        "label": "Blood Sugar Tests",
-        "value": 210
-      },
-      {
-        "label": "BP Checks",
-        "value": 275
-      }
-    ],
-    "doctors": [
-      {
-        "name": "Dr. Chaitanya Kuppaganthu",
-        "role": "General Medicine"
-      },
-      {
-        "name": "Dr. Krishna Veeramalla",
-        "role": "General Medicine"
-      },
-      {
-        "name": "Dr. Sridhar",
-        "role": "Eye Specialist"
-      },
-      {
-        "name": "Dr. Vidya Sagar",
-        "role": "General Medicine"
-      }
-    ],
-    "highlights": [
-      "14 successful cataract surgery candidates screened and scheduled for free procedures.",
-      "Specialized dental health consultation booth added for local village school children.",
-      "Conducted live demonstration on food nutrition and correct dietary routines for healthy blood sugar."
-    ],
-    "testimonials": [
-      {
-        "quote": "The doctor explained how to control my diabetes with food and walks, not just tablets. I feel much healthier now.",
-        "author": "Mallesh, patient from neighboring village"
-      }
-    ],
-    "gallery": [
-      imgRegistration,
-      imgConsultation,
-      imgEye,
-      imgLab,
-      imgMedicine,
-      imgTeam
-    ],
-    "videoUrl": ""
   }
 ];
