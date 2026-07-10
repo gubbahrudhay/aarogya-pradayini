@@ -31,7 +31,10 @@ export default function Blogs() {
   // Combine and sort articles by date descending
   // (June 2026 > May 2026 > April 2026)
   const allItems = useMemo(() => {
-    const combined = [...campReports, ...blogs];
+    const savedBlogs = localStorage.getItem('aarogya_blogs');
+    const activeBlogs = savedBlogs ? JSON.parse(savedBlogs) : blogs;
+    const publicBlogs = activeBlogs.filter(b => b.status === 'published' || b.status === undefined);
+    const combined = [...campReports, ...publicBlogs];
     return combined.sort((a, b) => new Date(b.date || b.publishedDate) - new Date(a.date || a.publishedDate));
   }, []);
 

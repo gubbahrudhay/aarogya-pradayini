@@ -4,11 +4,16 @@ import { blogs } from '../data/blogs';
 import { campReports } from '../data/campReports';
 
 export default function Sidebar({ searchValue, onSearchChange, activeCategory, onSelectCategory }) {
+  // Load from localStorage if present
+  const savedBlogs = localStorage.getItem('aarogya_blogs');
+  const activeBlogs = savedBlogs ? JSON.parse(savedBlogs) : blogs;
+  const publicBlogs = activeBlogs.filter(b => b.status === 'published' || b.status === undefined);
+
   // Combine and sort latest items
-  const recentArticles = [...blogs]
+  const recentArticles = [...publicBlogs]
     .slice(0, 3);
 
-  const popularArticles = blogs.filter(b => b.popular).slice(0, 3);
+  const popularArticles = publicBlogs.filter(b => b.popular).slice(0, 3);
 
   const archives = campReports.map(c => ({
     label: c.month,

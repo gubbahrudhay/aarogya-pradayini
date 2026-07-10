@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, Save, CheckCircle, PlusCircle, Trash2, Edit, Eye, Sparkles } from 'lucide-react';
 import { blogs as initialBlogs } from '../../data/blogs';
+import { useAuth } from '../contexts/AuthContext';
 
 const getFallbackAIBlog = (topic) => {
   const t = topic.toLowerCase();
@@ -33,7 +34,11 @@ const getFallbackAIBlog = (topic) => {
 };
 
 export default function BlogManager() {
-  const [blogs, setBlogs] = useState(initialBlogs);
+  const { role } = useAuth();
+  const [blogs, setBlogs] = useState(() => {
+    const saved = localStorage.getItem('aarogya_blogs');
+    return saved ? JSON.parse(saved) : initialBlogs;
+  });
   const [editingBlog, setEditingBlog] = useState(null);
   const [editorState, setEditorState] = useState({
     title: '',
@@ -82,7 +87,7 @@ export default function BlogManager() {
     setSuccessMsg('');
 
     try {
-      const apiKey = import.meta.env.VITE_FIREBASE_API_KEY;
+      const apiKey = import.meta.env.VITE_GEMINI_KEY || import.meta.env.VITE_FIREBASE_API_KEY;
       if (!apiKey || apiKey === 'YOUR_API_KEY') {
         setTimeout(() => {
           const generated = getFallbackAIBlog(aiPrompt);
@@ -126,7 +131,8 @@ export default function BlogManager() {
         throw new Error(result.error?.message || 'Gemini service invocation failed');
       }
 
-      const text = result.candidates[0].content.parts[0].text;
+      let text = result.candidates[0].content.parts[0].text;
+      text = text.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
       const parsed = JSON.parse(text);
 
       setEditorState({
@@ -160,6 +166,7 @@ export default function BlogManager() {
     setSuccessMsg('');
     
     setTimeout(() => {
+      let updatedBlogs = [];
       if (editingBlog === 'new') {
         const newBlogObj = {
           id: blogs.length + 1,
@@ -172,9 +179,9 @@ export default function BlogManager() {
           status: publish ? 'published' : 'draft',
           date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
         };
-        setBlogs([newBlogObj, ...blogs]);
+        updatedBlogs = [newBlogObj, ...blogs];
       } else {
-        setBlogs(blogs.map(b => b.id === editingBlog.id ? {
+        updatedBlogs = blogs.map(b => b.id === editingBlog.id ? {
           ...b,
           title: editorState.title,
           category: editorState.category,
@@ -182,8 +189,10 @@ export default function BlogManager() {
           summary: editorState.summary,
           content: editorState.content,
           status: publish ? 'published' : 'draft'
-        } : b));
+        } : b);
       }
+      setBlogs(updatedBlogs);
+      localStorage.setItem('aarogya_blogs', JSON.stringify(updatedBlogs));
       setLoading(false);
       setSuccessMsg(publish ? 'Article published successfully!' : 'Article draft successfully saved.');
       setEditingBlog(null);
@@ -191,7 +200,17 @@ export default function BlogManager() {
   };
 
   const handleDelete = (id) => {
-    setBlogs(blogs.filter(b => b.id !== id));
+    if (role !== 'super-admin') {
+      setSuccessMsg('Permission denied: Only Super Admins can delete blog articles.');
+      return;
+    }
+
+    const confirmDelete = window.confirm("Are you sure you want to delete this blog post? This action cannot be undone.");
+    if (!confirmDelete) return;
+
+    const updatedBlogs = blogs.filter(b => b.id !== id);
+    setBlogs(updatedBlogs);
+    localStorage.setItem('aarogya_blogs', JSON.stringify(updatedBlogs));
     setSuccessMsg('Article removed from database.');
   };
 
@@ -400,13 +419,15 @@ export default function BlogManager() {
                     >
                       <Edit className="w-3.5 h-3.5" />
                     </button>
-                    <button
-                      onClick={() => handleDelete(b.id)}
-                      className="p-2 bg-bg hover:bg-red-50 text-text-secondary/40 hover:text-red-600 border border-border rounded-xl transition-colors"
-                      title="Delete article"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    {role === 'super-admin' && (
+                      <button
+                        onClick={() => handleDelete(b.id)}
+                        className="p-2 bg-bg hover:bg-red-50 text-text-secondary/40 hover:text-red-600 border border-border rounded-xl transition-colors"
+                        title="Delete article"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

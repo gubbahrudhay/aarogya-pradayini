@@ -59,38 +59,38 @@ export default function CampManager() {
     setLoading(true);
     setSuccessMsg('');
 
+    const getValue = (regex, defaultVal = 0) => {
+      const match = whatsappText.match(regex);
+      return match ? parseInt(match[1], 10) : defaultVal;
+    };
+
+    const dateMatch = whatsappText.match(/Date:\s*([\d.]+)/);
+    const parsedDate = dateMatch ? dateMatch[1].split('.').reverse().join('-') : '2026-06-14';
+    const formattedDateForDrafts = dateMatch ? dateMatch[1] : '14.06.2026';
+
+    const docMatch = whatsappText.match(/Doctors in attendance:\s*(.+)/);
+    const parsedDocs = docMatch ? docMatch[1].trim() : 'Dr. Rajesh Gubba, Dr. Sridhar';
+
+    const patientsCount = getValue(/Total Patients:\s*(\d+)/, 520);
+    const maleCount = getValue(/Male Patients:\s*(\d+)/, 156);
+    const femaleCount = getValue(/Female Patients:\s*(\d+)/, 364);
+    const bpCount = getValue(/BP Tests Done:\s*(\d+)/, 340);
+    const sugarCount = getValue(/Sugar Tests Done:\s*(\d+)/, 290);
+    const cataractCount = getValue(/Cataract Cases Identified:\s*(\d+)/, 28);
+    const volunteerCount = getValue(/Volunteer count:\s*(\d+)/, 25);
+    const villageCount = getValue(/Total Villages Covered:\s*(\d+)/, 71);
+
+    const generatedSummary = `Our monthly medical camp for June was completed successfully at the Sai Baba temple premises in Kalwakurthy. A total of ${patientsCount} patients from ${villageCount} surrounding villages were served by our whitelisted medical specialists. Free diagnostic checks, blood pressure screenings, and sugar screenings were carried out on-site. Additionally, ${cataractCount} cases of cataract were diagnosed and scheduled for free surgical operations.`;
+
+    // Fallback drafts with the date included
+    const liDraft = `🌟 SRI SATHYA SAI HEALTH SERVICES - KALWAKURTHY (Camp Date: ${formattedDateForDrafts}) 🌟\n\nWe are overjoyed to share the impact report from our monthly medical camp conducted on ${formattedDateForDrafts}:\n\n👥 Patients Served: ${patientsCount} (${maleCount} Male, ${femaleCount} Female)\n🏡 Villages Reached: ${villageCount}\n🩺 BP Screenings: ${bpCount} | Sugar Checks: ${sugarCount}\n👁️ Cataract Operations Scheduled: ${cataractCount}\n\nOur heartfelt thanks to our specialist doctors and the ${volunteerCount} Sevadal volunteers who made this possible. "Love All, Serve All."\n\n#HealthcareForAll #NGO #SaiRam #CommunityCare`;
+
+    const instaDraft = `Moments of Hope and Care from Kalwakurthy on ${formattedDateForDrafts}! 🧡\n\nTotal Patients: ${patientsCount}\nVolunteers: ${volunteerCount}\nDiagnostics BP/Sugar: ${bpCount}/${sugarCount}\nCataract surgeries: ${cataractCount} (Scheduled Free)\n\n"Service to man is service to God." 🙏\n\n#SathyaSai #FreeMedicalCamp #Telangana #SocialWork #Seva`;
+
+    const youtubeDraft = `🎥 Highlights of the Free Medical Camp conducted in Kalwakurthy on ${formattedDateForDrafts}.\n\nUnder Sri Sathya Sai Health Services, we organized another successful monthly camp to serve our rural community.\n\n📊 Key Camp Statistics:\n• Patients Treated: ${patientsCount} (${maleCount} Male, ${femaleCount} Female)\n• Diagnostic BP & Sugar Screenings: ${bpCount} / ${sugarCount}\n• Cataract Surgeries Scheduled: ${cataractCount} (Completely Free)\n• Villages Covered: ${villageCount}\n• Volunteers: ${volunteerCount}\n\nThank you to our dedicated doctors and volunteers for their selfless service. "Love All, Serve All." 🙏\n\n#SaiSeva #FreeMedicalCamp #RuralHealthcare #NGO`;
+
     try {
-      const apiKey = import.meta.env.VITE_FIREBASE_API_KEY;
-
-      const getValue = (regex, defaultVal = 0) => {
-        const match = whatsappText.match(regex);
-        return match ? parseInt(match[1], 10) : defaultVal;
-      };
-
-      const dateMatch = whatsappText.match(/Date:\s*([\d.]+)/);
-      const parsedDate = dateMatch ? dateMatch[1].split('.').reverse().join('-') : '2026-06-14';
-      const formattedDateForDrafts = dateMatch ? dateMatch[1] : '14.06.2026';
-
-      const docMatch = whatsappText.match(/Doctors in attendance:\s*(.+)/);
-      const parsedDocs = docMatch ? docMatch[1].trim() : 'Dr. Rajesh Gubba, Dr. Sridhar';
-
-      const patientsCount = getValue(/Total Patients:\s*(\d+)/, 520);
-      const maleCount = getValue(/Male Patients:\s*(\d+)/, 156);
-      const femaleCount = getValue(/Female Patients:\s*(\d+)/, 364);
-      const bpCount = getValue(/BP Tests Done:\s*(\d+)/, 340);
-      const sugarCount = getValue(/Sugar Tests Done:\s*(\d+)/, 290);
-      const cataractCount = getValue(/Cataract Cases Identified:\s*(\d+)/, 28);
-      const volunteerCount = getValue(/Volunteer count:\s*(\d+)/, 25);
-      const villageCount = getValue(/Total Villages Covered:\s*(\d+)/, 71);
-
-      const generatedSummary = `Our monthly medical camp for June was completed successfully at the Sai Baba temple premises in Kalwakurthy. A total of ${patientsCount} patients from ${villageCount} surrounding villages were served by our whitelisted medical specialists. Free diagnostic checks, blood pressure screenings, and sugar screenings were carried out on-site. Additionally, ${cataractCount} cases of cataract were diagnosed and scheduled for free surgical operations.`;
-
-      // Fallback drafts with the date included
-      const liDraft = `🌟 SRI SATHYA SAI HEALTH SERVICES - KALWAKURTHY (Camp Date: ${formattedDateForDrafts}) 🌟\n\nWe are overjoyed to share the impact report from our monthly medical camp conducted on ${formattedDateForDrafts}:\n\n👥 Patients Served: ${patientsCount} (${maleCount} Male, ${femaleCount} Female)\n🏡 Villages Reached: ${villageCount}\n🩺 BP Screenings: ${bpCount} | Sugar Checks: ${sugarCount}\n👁️ Cataract Operations Scheduled: ${cataractCount}\n\nOur heartfelt thanks to our specialist doctors and the ${volunteerCount} Sevadal volunteers who made this possible. "Love All, Serve All."\n\n#HealthcareForAll #NGO #SaiRam #CommunityCare`;
-
-      const instaDraft = `Moments of Hope and Care from Kalwakurthy on ${formattedDateForDrafts}! 🧡\n\nTotal Patients: ${patientsCount}\nVolunteers: ${volunteerCount}\nDiagnostics BP/Sugar: ${bpCount}/${sugarCount}\nCataract surgeries: ${cataractCount} (Scheduled Free)\n\n"Service to man is service to God." 🙏\n\n#SathyaSai #FreeMedicalCamp #Telangana #SocialWork #Seva`;
-
-      const youtubeDraft = `🎥 Highlights of the Free Medical Camp conducted in Kalwakurthy on ${formattedDateForDrafts}.\n\nUnder Sri Sathya Sai Health Services, we organized another successful monthly camp to serve our rural community.\n\n📊 Key Camp Statistics:\n• Patients Treated: ${patientsCount} (${maleCount} Male, ${femaleCount} Female)\n• Diagnostic BP & Sugar Screenings: ${bpCount} / ${sugarCount}\n• Cataract Surgeries Scheduled: ${cataractCount} (Completely Free)\n• Villages Covered: ${villageCount}\n• Volunteers: ${volunteerCount}\n\nThank you to our dedicated doctors and volunteers for their selfless service. "Love All, Serve All." 🙏\n\n#SaiSeva #FreeMedicalCamp #RuralHealthcare #NGO`;
+      const apiKey = import.meta.env.VITE_GEMINI_KEY || import.meta.env.VITE_FIREBASE_API_KEY;
 
       if (!apiKey || apiKey === 'YOUR_API_KEY') {
         // Fallback simulation
@@ -116,7 +116,7 @@ export default function CampManager() {
           });
           setLoading(false);
           setSuccessMsg('AI successfully extracted statistics and drafted social media posts (local fallback)!');
-          setActiveTab('stats');
+          setActiveTab('general');
         }, 1200);
         return;
       }
@@ -194,7 +194,9 @@ Do not add markdown formatting or wrappers like \`\`\`json.`;
         throw new Error(result.error?.message || 'Gemini service invocation failed');
       }
 
-      const text = result.candidates[0].content.parts[0].text;
+      let text = result.candidates[0].content.parts[0].text;
+      // Strip markdown code block formatting if present
+      text = text.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
       const parsed = JSON.parse(text);
 
       setCampDetails({
@@ -218,15 +220,31 @@ Do not add markdown formatting or wrappers like \`\`\`json.`;
       });
 
       setSuccessMsg('AI successfully extracted statistics and drafted social media posts via Gemini API!');
-      setActiveTab('stats');
+      setActiveTab('general');
     } catch (err) {
       console.error('Gemini generateContent error in CampManager:', err);
       // Fallback
-      setCampDetails(prev => ({
-        ...prev,
-        youtubeDraft: `🎥 Highlights of the Free Medical Camp conducted in Kalwakurthy on ${prev.date || '2026-06-14'}.\n\nUnder Sri Sathya Sai Health Services, we organized another successful monthly camp to serve our rural community.\n\n📊 Key Camp Statistics:\n• Patients Treated: ${prev.patients}\n• Diagnostic BP & Sugar Screenings: ${prev.bpTests} / ${prev.sugarTests}\n• Cataract Surgeries Scheduled: ${prev.cataracts} (Completely Free)\n• Villages Covered: ${prev.villages}\n• Volunteers: ${prev.volunteers}\n\nThank you to our dedicated doctors and volunteers for their selfless service. "Love All, Serve All." 🙏\n\n#SaiSeva #FreeMedicalCamp #RuralHealthcare #NGO`
-      }));
-      setSuccessMsg('Camp details updated with YouTube draft fallback.');
+      setCampDetails({
+        title: `June 2026 Free Medical Camp`,
+        date: parsedDate,
+        location: 'Kalwakurthy',
+        status: 'draft',
+        patients: patientsCount,
+        male: maleCount,
+        female: femaleCount,
+        villages: villageCount,
+        bpTests: bpCount,
+        sugarTests: sugarCount,
+        cataracts: cataractCount,
+        volunteers: volunteerCount,
+        doctorsText: parsedDocs,
+        summaryText: generatedSummary,
+        linkedinDraft: liDraft,
+        instagramDraft: instaDraft,
+        youtubeDraft: youtubeDraft
+      });
+      setSuccessMsg('AI extraction failed, loaded local fallback details successfully.');
+      setActiveTab('general');
     } finally {
       setLoading(false);
     }
