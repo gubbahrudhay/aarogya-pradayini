@@ -28,13 +28,16 @@ export default function Blogs() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Combine and sort articles by date descending
-  // (June 2026 > May 2026 > April 2026)
   const allItems = useMemo(() => {
+    const savedCamps = localStorage.getItem('aarogya_camps');
+    const activeCamps = savedCamps ? JSON.parse(savedCamps) : campReports;
+    const publicCamps = activeCamps.filter(c => c.status === 'published' || c.status === undefined);
+
     const savedBlogs = localStorage.getItem('aarogya_blogs');
     const activeBlogs = savedBlogs ? JSON.parse(savedBlogs) : blogs;
     const publicBlogs = activeBlogs.filter(b => b.status === 'published' || b.status === undefined);
-    const combined = [...campReports, ...publicBlogs];
+
+    const combined = [...publicCamps, ...publicBlogs];
     return combined.sort((a, b) => new Date(b.date || b.publishedDate) - new Date(a.date || a.publishedDate));
   }, []);
 

@@ -33,6 +33,49 @@ const getFallbackAIBlog = (topic) => {
   }
 };
 
+const serializeBlogs = (blogsArray) => {
+  let json = JSON.stringify(blogsArray, null, 2);
+  // Replace string paths with their corresponding JS variable imports
+  json = json.replace(/"coverImage":\s*"[^"]*camp_doctor_consultation[^"]*"/g, '"coverImage": imgDoctor');
+  json = json.replace(/"coverImage":\s*"[^"]*camp_health_awareness[^"]*"/g, '"coverImage": imgAwareness');
+  json = json.replace(/"coverImage":\s*"[^"]*camp_eye_screening[^"]*"/g, '"coverImage": imgEye');
+  json = json.replace(/"coverImage":\s*"[^"]*camp_vital_signs[^"]*"/g, '"coverImage": imgVital');
+  json = json.replace(/"coverImage":\s*"[^"]*camp_lab_diagnostics[^"]*"/g, '"coverImage": imgLab');
+  return `import imgDoctor from '../assets/images/camp_doctor_consultation.jpeg';
+import imgAwareness from '../assets/images/camp_health_awareness.jpeg';
+import imgEye from '../assets/images/camp_eye_screening.jpeg';
+import imgVital from '../assets/images/camp_vital_signs.jpeg';
+import imgLab from '../assets/images/camp_lab_diagnostics.jpeg';
+
+export const blogs = ${json};
+`;
+};
+
+const publishBlogsToGithub = async (updatedBlogs) => {
+  try {
+    const fileContent = serializeBlogs(updatedBlogs);
+    const response = await fetch('/api/publish', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        filePath: 'src/data/blogs.js',
+        content: fileContent,
+        commitMessage: 'admin: publish blog changes'
+      })
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to publish blogs to GitHub');
+    }
+    return true;
+  } catch (err) {
+    console.error('Publish blogs error:', err);
+    return false;
+  }
+};
+
 export default function BlogManager() {
   const { role } = useAuth();
   const [blogs, setBlogs] = useState(() => {
@@ -161,45 +204,59 @@ export default function BlogManager() {
     }
   };
 
-  const handleSave = (publish = false) => {
+  const handleSave = async (publish = false) => {
     setLoading(true);
     setSuccessMsg('');
     
-    setTimeout(() => {
-      let updatedBlogs = [];
-      if (editingBlog === 'new') {
-        const newBlogObj = {
-          id: blogs.length + 1,
-          slug: editorState.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-          title: editorState.title,
-          category: editorState.category,
-          readingTime: editorState.readingTime,
-          summary: editorState.summary,
-          content: editorState.content,
-          status: publish ? 'published' : 'draft',
-          date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-        };
-        updatedBlogs = [newBlogObj, ...blogs];
+    let updatedBlogs = [];
+    if (editingBlog === 'new') {
+      const newBlogObj = {
+        id: blogs.length + 1,
+        slug: editorState.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        title: editorState.title,
+        category: editorState.category,
+        readingTime: editorState.readingTime,
+        summary: editorState.summary,
+        content: editorState.content,
+        status: publish ? 'published' : 'draft',
+        date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+      };
+      updatedBlogs = [newBlogObj, ...blogs];
+    } else {
+      updatedBlogs = blogs.map(b => b.id === editingBlog.id ? {
+        ...b,
+        title: editorState.title,
+        category: editorState.category,
+        readingTime: editorState.readingTime,
+        summary: editorState.summary,
+        content: editorState.content,
+        status: publish ? 'published' : 'draft'
+      } : b);
+    }
+    
+    setBlogs(updatedBlogs);
+    localStorage.setItem('aarogya_blogs', JSON.stringify(updatedBlogs));
+    
+    // Always trigger GitHub commit when publishing
+    let githubSuccess = false;
+    if (publish) {
+      githubSuccess = await publishBlogsToGithub(updatedBlogs);
+    }
+    
+    setLoading(false);
+    if (publish) {
+      if (githubSuccess) {
+        setSuccessMsg('Article published successfully & committed to GitHub (redeploy triggered)!');
       } else {
-        updatedBlogs = blogs.map(b => b.id === editingBlog.id ? {
-          ...b,
-          title: editorState.title,
-          category: editorState.category,
-          readingTime: editorState.readingTime,
-          summary: editorState.summary,
-          content: editorState.content,
-          status: publish ? 'published' : 'draft'
-        } : b);
+        setSuccessMsg('Article saved locally, but failed to commit to GitHub.');
       }
-      setBlogs(updatedBlogs);
-      localStorage.setItem('aarogya_blogs', JSON.stringify(updatedBlogs));
-      setLoading(false);
-      setSuccessMsg(publish ? 'Article published successfully!' : 'Article draft successfully saved.');
-      setEditingBlog(null);
-    }, 1000);
+    } else {
+      setSuccessMsg('Article draft successfully saved.');
+    }
+    setEditingBlog(null);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (role !== 'super-admin') {
       setSuccessMsg('Permission denied: Only Super Admins can delete blog articles.');
       return;
@@ -211,7 +268,16 @@ export default function BlogManager() {
     const updatedBlogs = blogs.filter(b => b.id !== id);
     setBlogs(updatedBlogs);
     localStorage.setItem('aarogya_blogs', JSON.stringify(updatedBlogs));
-    setSuccessMsg('Article removed from database.');
+    
+    setLoading(true);
+    const githubSuccess = await publishBlogsToGithub(updatedBlogs);
+    setLoading(false);
+
+    if (githubSuccess) {
+      setSuccessMsg('Article removed from database and deleted from GitHub repository.');
+    } else {
+      setSuccessMsg('Article removed locally, but failed to delete from GitHub repository.');
+    }
   };
 
   return (

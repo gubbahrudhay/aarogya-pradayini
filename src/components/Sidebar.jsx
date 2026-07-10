@@ -15,7 +15,11 @@ export default function Sidebar({ searchValue, onSearchChange, activeCategory, o
 
   const popularArticles = publicBlogs.filter(b => b.popular).slice(0, 3);
 
-  const archives = campReports.map(c => ({
+  const savedCamps = localStorage.getItem('aarogya_camps');
+  const activeCamps = savedCamps ? JSON.parse(savedCamps) : campReports;
+  const publicCamps = activeCamps.filter(c => c.status === 'published' || c.status === undefined);
+
+  const archives = publicCamps.map(c => ({
     label: c.month,
     slug: c.slug
   }));

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
+import { campReports as initialCamps } from '../../data/campReports';
 import {
   FileText,
   Sparkles,
@@ -10,7 +11,10 @@ import {
   Share2,
   ListPlus,
   Eye,
-  AlertTriangle
+  AlertTriangle,
+  PlusCircle,
+  Trash2,
+  Edit
 } from 'lucide-react';
 
 const sampleReport = `AUM SRI SAI RAM
@@ -177,8 +181,78 @@ const robustRegexParse = (rawText) => {
   };
 };
 
+const serializeCamps = (campsArray) => {
+  let json = JSON.stringify(campsArray, null, 2);
+  
+  const replacements = [
+    { varName: 'imgRegistration', file: 'camp_registration_queue' },
+    { varName: 'imgConsultation', file: 'camp_consultation_hall' },
+    { varName: 'imgEye', file: 'camp_eye_screening' },
+    { varName: 'imgVital', file: 'camp_vital_signs' },
+    { varName: 'imgLab', file: 'camp_lab_diagnostics' },
+    { varName: 'imgMedicine', file: 'camp_medicine_distribution' },
+    { varName: 'imgTeam', file: 'camp_team_group' },
+    { varName: 'imgAwareness', file: 'camp_health_awareness' },
+    { varName: 'imgDoctor', file: 'camp_doctor_consultation' }
+  ];
+
+  replacements.forEach(r => {
+    const coverRegex = new RegExp(`"coverImage":\\s*"[^"]*${r.file}[^"]*"`, 'g');
+    json = json.replace(coverRegex, `"coverImage": ${r.varName}`);
+    
+    const galleryRegex = new RegExp(`"[^"]*${r.file}[^"]*"`, 'g');
+    json = json.replace(galleryRegex, r.varName);
+  });
+
+  return `import imgRegistration from '../assets/images/camp_registration_queue.jpeg';
+import imgConsultation from '../assets/images/camp_consultation_hall.jpeg';
+import imgEye from '../assets/images/camp_eye_screening.jpeg';
+import imgVital from '../assets/images/camp_vital_signs.jpeg';
+import imgLab from '../assets/images/camp_lab_diagnostics.jpeg';
+import imgMedicine from '../assets/images/camp_medicine_distribution.jpeg';
+import imgTeam from '../assets/images/camp_team_group.jpeg';
+import imgAwareness from '../assets/images/camp_health_awareness.jpeg';
+import imgDoctor from '../assets/images/camp_doctor_consultation.jpeg';
+
+export const campReports = ${json};
+`;
+};
+
+const publishCampsToGithub = async (updatedCamps) => {
+  try {
+    const fileContent = serializeCamps(updatedCamps);
+    const response = await fetch('/api/publish', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        filePath: 'src/data/campReports.js',
+        content: fileContent,
+        commitMessage: 'admin: publish camp report changes'
+      })
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to publish camp reports to GitHub');
+    }
+    return true;
+  } catch (err) {
+    console.error('Publish camps error:', err);
+    return false;
+  }
+};
+
 export default function CampManager() {
   const { role } = useAuth();
+  
+  // Camp list management
+  const [camps, setCamps] = useState(() => {
+    const saved = localStorage.getItem('aarogya_camps');
+    return saved ? JSON.parse(saved) : initialCamps;
+  });
+  const [editingCamp, setEditingCamp] = useState(null); // null (list), 'new', or camp object
+
   const [whatsappText, setWhatsappText] = useState(sampleReport);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('general'); // general, stats, social, preview
@@ -186,8 +260,8 @@ export default function CampManager() {
 
   // Camp Form States
   const [campDetails, setCampDetails] = useState({
-    title: 'June 2026 Free Medical Camp',
-    date: '2026-06-14',
+    title: '',
+    date: '',
     location: 'Kalwakurthy',
     status: 'draft',
     patients: 0,
@@ -204,6 +278,84 @@ export default function CampManager() {
     instagramDraft: '',
     youtubeDraft: ''
   });
+
+  const handleEditClick = (camp) => {
+    setEditingCamp(camp);
+    
+    // Check if the camp report has stored rawReport, else load fallback
+    setWhatsappText(camp.rawReport || sampleReport);
+
+    const editorFields = camp.editorFields || {
+      title: camp.title,
+      date: camp.date ? new Date(camp.date).toISOString().split('T')[0] : '',
+      location: camp.location || 'Kalwakurthy',
+      status: camp.status || 'published',
+      patients: camp.patientsServed || camp.patients || 0,
+      male: camp.stats?.find(s => s.label.toLowerCase().includes('male'))?.value || Math.round((camp.patientsServed || 0) * 0.3),
+      female: camp.stats?.find(s => s.label.toLowerCase().includes('female'))?.value || Math.round((camp.patientsServed || 0) * 0.7),
+      villages: camp.stats?.find(s => s.label.toLowerCase().includes('village'))?.value || 71,
+      bpTests: camp.stats?.find(s => s.label.toLowerCase().includes('bp'))?.value || 0,
+      sugarTests: camp.stats?.find(s => s.label.toLowerCase().includes('sugar'))?.value || 0,
+      cataracts: camp.stats?.find(s => s.label.toLowerCase().includes('cataract'))?.value || 0,
+      volunteers: camp.volunteers || 25,
+      doctorsText: camp.doctors?.map(d => d.name).join(', ') || '',
+      summaryText: camp.summary,
+      linkedinDraft: camp.linkedinDraft || '',
+      instagramDraft: camp.instagramDraft || '',
+      youtubeDraft: camp.youtubeDraft || ''
+    };
+    setCampDetails(editorFields);
+    setSuccessMsg('');
+  };
+
+  const handleCreateNewClick = () => {
+    setEditingCamp('new');
+    setCampDetails({
+      title: 'June 2026 Free Medical Camp',
+      date: '2026-06-14',
+      location: 'Kalwakurthy',
+      status: 'draft',
+      patients: 0,
+      male: 0,
+      female: 0,
+      villages: 0,
+      bpTests: 0,
+      sugarTests: 0,
+      cataracts: 0,
+      volunteers: 0,
+      doctorsText: '',
+      summaryText: '',
+      linkedinDraft: '',
+      instagramDraft: '',
+      youtubeDraft: ''
+    });
+    setWhatsappText(sampleReport);
+    setSuccessMsg('');
+  };
+
+  const handleDelete = async (id) => {
+    if (role !== 'super-admin') {
+      setSuccessMsg('Permission denied: Only Super Admins can delete camp reports.');
+      return;
+    }
+
+    const confirmDelete = window.confirm("Are you sure you want to delete this camp report? This action cannot be undone.");
+    if (!confirmDelete) return;
+
+    const updatedCamps = camps.filter(c => c.id !== id);
+    setCamps(updatedCamps);
+    localStorage.setItem('aarogya_camps', JSON.stringify(updatedCamps));
+
+    setLoading(true);
+    const githubSuccess = await publishCampsToGithub(updatedCamps);
+    setLoading(false);
+
+    if (githubSuccess) {
+      setSuccessMsg('Camp report removed from database and deleted from GitHub repository.');
+    } else {
+      setSuccessMsg('Camp report removed locally, but failed to delete from GitHub repository.');
+    }
+  };
 
   const handleAIParse = async () => {
     setLoading(true);
@@ -336,13 +488,91 @@ Do not add markdown formatting or wrappers like \`\`\`json.`;
     }
   };
 
-  const handleSave = (publish = false) => {
+  const handleSave = async (publish = false) => {
     setLoading(true);
-    setTimeout(() => {
-      setCampDetails(prev => ({ ...prev, status: publish ? 'published' : 'draft' }));
-      setLoading(false);
-      setSuccessMsg(publish ? 'Camp report successfully published to main website!' : 'Draft successfully saved to database.');
-    }, 1000);
+    setSuccessMsg('');
+
+    // Generate stats array matching public site format
+    const statsArray = [
+      { label: 'General Medicine', value: Math.round(campDetails.patients * 0.6) },
+      { label: 'Cardiology', value: campDetails.bpTests > 0 ? Math.round(campDetails.bpTests * 0.12) : 38 },
+      { label: 'Eye Screening', value: campDetails.cataracts > 0 ? Math.round(campDetails.cataracts * 6) : 140 },
+      { label: 'Cataract Surgery Registered', value: campDetails.cataracts },
+      { label: 'Blood Sugar Tests', value: campDetails.sugarTests },
+      { label: 'BP Checks', value: campDetails.bpTests }
+    ];
+
+    // Build the camp object
+    let updatedCamps = [];
+    if (editingCamp === 'new') {
+      const newCampObj = {
+        id: `camp-${campDetails.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+        slug: campDetails.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        type: 'camp-report',
+        title: campDetails.title,
+        month: new Date(campDetails.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+        date: new Date(campDetails.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+        location: campDetails.location || 'Sai Baba Temple Altar, Kalwakurthy',
+        coverImage: 'imgRegistration', // Default to matching variable
+        patientsServed: campDetails.patients,
+        summary: campDetails.summaryText,
+        stats: statsArray,
+        doctors: (campDetails.doctorsText || 'Dr. Rajesh Gubba, Dr. Sridhar').split(',').map(d => ({ name: d.trim(), role: 'Medical Specialist' })),
+        highlights: [
+          `Successfully served ${campDetails.patients} patients from surrounding villages.`,
+          `Identified ${campDetails.cataracts} cataract cases scheduled for free surgery.`,
+          `Conducted ${campDetails.bpTests} blood pressure checks and ${campDetails.sugarTests} sugar tests.`
+        ],
+        testimonials: [
+          {
+            quote: 'We appreciate the selfless service of all doctors and volunteers who help our village every month.',
+            author: 'Kalwakurthy Villager'
+          }
+        ],
+        gallery: ['imgEye', 'imgConsultation', 'imgVital', 'imgLab', 'imgMedicine', 'imgTeam'],
+        videoUrl: '',
+        status: publish ? 'published' : 'draft',
+        rawReport: whatsappText,
+        // Preserve editor fields for admin re-editing
+        editorFields: { ...campDetails }
+      };
+      updatedCamps = [newCampObj, ...camps];
+    } else {
+      updatedCamps = camps.map(c => c.id === editingCamp.id ? {
+        ...c,
+        title: campDetails.title,
+        month: new Date(campDetails.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+        date: new Date(campDetails.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+        location: campDetails.location,
+        patientsServed: campDetails.patients,
+        summary: campDetails.summaryText,
+        stats: statsArray,
+        doctors: (campDetails.doctorsText || 'Dr. Rajesh Gubba, Dr. Sridhar').split(',').map(d => ({ name: d.trim(), role: 'Medical Specialist' })),
+        status: publish ? 'published' : 'draft',
+        rawReport: whatsappText,
+        editorFields: { ...campDetails }
+      } : c);
+    }
+
+    setCamps(updatedCamps);
+    localStorage.setItem('aarogya_camps', JSON.stringify(updatedCamps));
+
+    let githubSuccess = false;
+    if (publish) {
+      githubSuccess = await publishCampsToGithub(updatedCamps);
+    }
+
+    setLoading(false);
+    if (publish) {
+      if (githubSuccess) {
+        setSuccessMsg('Camp report successfully published to GitHub (Vercel redeploy triggered)!');
+      } else {
+        setSuccessMsg('Camp report saved locally, but failed to commit to GitHub.');
+      }
+    } else {
+      setSuccessMsg('Draft successfully saved.');
+    }
+    setEditingCamp(null);
   };
 
   return (
@@ -359,22 +589,44 @@ Do not add markdown formatting or wrappers like \`\`\`json.`;
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => handleSave(false)}
-            disabled={loading}
-            className="inline-flex items-center gap-1.5 bg-white border border-border text-text-primary px-4 py-2.5 rounded-xl text-xs font-semibold hover:bg-bg transition-colors duration-300"
-          >
-            <Save className="w-4 h-4 text-text-secondary" />
-            Save Draft
-          </button>
-          <button
-            onClick={() => handleSave(true)}
-            disabled={loading || role === 'volunteer'}
-            className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary/95 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-colors duration-300 disabled:opacity-50"
-          >
-            <CheckCircle className="w-4 h-4" />
-            Publish Website
-          </button>
+          {editingCamp ? (
+            <>
+              <button
+                type="button"
+                onClick={() => setEditingCamp(null)}
+                className="bg-white border border-border text-text-secondary hover:bg-bg px-4 py-2.5 rounded-xl text-xs font-semibold transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSave(false)}
+                disabled={loading}
+                className="inline-flex items-center gap-1.5 bg-white border border-border text-text-primary px-4 py-2.5 rounded-xl text-xs font-semibold hover:bg-bg transition-colors duration-300 disabled:opacity-50"
+              >
+                <Save className="w-4 h-4 text-text-secondary" />
+                Save Draft
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSave(true)}
+                disabled={loading || role === 'volunteer'}
+                className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary/95 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-colors duration-300 disabled:opacity-50"
+              >
+                <CheckCircle className="w-4 h-4" />
+                Publish Website
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={handleCreateNewClick}
+              className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary/95 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-colors duration-300"
+            >
+              <PlusCircle className="w-4 h-4" />
+              New Camp Report
+            </button>
+          )}
         </div>
       </div>
 
@@ -394,252 +646,323 @@ Do not add markdown formatting or wrappers like \`\`\`json.`;
         </div>
       )}
 
-      {/* Main Grid split */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left: Input WhatsApp Area */}
-        <div className="lg:col-span-4 bg-white border border-border rounded-3xl p-6 shadow-sm space-y-4">
-          <h2 className="font-poppins font-bold text-base text-text-primary flex items-center gap-2">
-            <span className="w-1.5 h-4 bg-primary rounded-full" />
-            WhatsApp Raw Report
-          </h2>
-          <p className="text-xs text-text-secondary leading-relaxed">
-            Paste the raw text summaries sent after the monthly medical camp closes in Kalwakurthy.
-          </p>
-          <textarea
-            value={whatsappText}
-            onChange={(e) => setWhatsappText(e.target.value)}
-            rows={14}
-            className="w-full border border-border bg-bg/50 rounded-2xl p-4 font-inter text-xs text-text-primary leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-            placeholder="Paste text here..."
-          />
-          <button
-            onClick={handleAIParse}
-            disabled={loading}
-            className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-blue-700 text-white font-bold py-3 px-4 rounded-2xl transition-all duration-300 shadow-sm active:scale-[0.98] disabled:opacity-60 text-xs font-poppins"
+      {/* Conditional rendering based on list or edit */}
+      <AnimatePresence mode="wait">
+        {editingCamp ? (
+          <motion.div
+            key="editor-view"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 15 }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
           >
-            <Sparkles className="w-4 h-4 text-accent animate-pulse" />
-            {loading ? 'AI Extracting Details...' : 'Generate AI Summary'}
-          </button>
-        </div>
+            {/* Left: Input WhatsApp Area */}
+            <div className="lg:col-span-4 bg-white border border-border rounded-3xl p-6 shadow-sm space-y-4">
+              <h2 className="font-poppins font-bold text-base text-text-primary flex items-center gap-2">
+                <span className="w-1.5 h-4 bg-primary rounded-full" />
+                WhatsApp Raw Report
+              </h2>
+              <p className="text-xs text-text-secondary leading-relaxed">
+                Paste the raw text summaries sent after the monthly medical camp closes in Kalwakurthy.
+              </p>
+              <textarea
+                value={whatsappText}
+                onChange={(e) => setWhatsappText(e.target.value)}
+                rows={14}
+                className="w-full border border-border bg-bg/50 rounded-2xl p-4 font-inter text-xs text-text-primary leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                placeholder="Paste text here..."
+              />
+              <button
+                type="button"
+                onClick={handleAIParse}
+                disabled={loading}
+                className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-blue-700 text-white font-bold py-3 px-4 rounded-2xl transition-all duration-300 shadow-sm active:scale-[0.98] disabled:opacity-60 text-xs font-poppins"
+              >
+                <Sparkles className="w-4 h-4 text-accent animate-pulse" />
+                {loading ? 'AI Extracting Details...' : 'Generate AI Summary'}
+              </button>
+            </div>
 
-        {/* Right: Tabbed Editor */}
-        <div className="lg:col-span-8 bg-white border border-border rounded-3xl overflow-hidden shadow-sm">
-          {/* Tabs header */}
-          <div className="flex border-b border-border bg-bg/20 p-2 gap-1.5">
-            {[
-              { id: 'general', label: 'General', icon: FileText },
-              { id: 'stats', label: 'Statistics', icon: Database },
-              { id: 'social', label: 'Social Media', icon: Share2 },
-              { id: 'preview', label: 'Preview Webpage', icon: Eye }
-            ].map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all duration-300 font-inter focus:outline-none ${
-                    activeTab === tab.id
-                      ? 'bg-white text-primary shadow-xs border border-border/60'
-                      : 'text-text-secondary hover:text-primary'
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
+            {/* Right: Tabbed Editor */}
+            <div className="lg:col-span-8 bg-white border border-border rounded-3xl overflow-hidden shadow-sm">
+              {/* Tabs header */}
+              <div className="flex border-b border-border bg-bg/20 p-2 gap-1.5">
+                {[
+                  { id: 'general', label: 'General', icon: FileText },
+                  { id: 'stats', label: 'Statistics', icon: Database },
+                  { id: 'social', label: 'Social Media', icon: Share2 },
+                  { id: 'preview', label: 'Preview Webpage', icon: Eye }
+                ].map((tab) => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all duration-300 font-inter focus:outline-none ${
+                        activeTab === tab.id
+                          ? 'bg-white text-primary shadow-xs border border-border/60'
+                          : 'text-text-secondary hover:text-primary'
+                      }`}
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
 
-          {/* Form Content body */}
-          <div className="p-6 sm:p-8 space-y-6">
-            <AnimatePresence mode="wait">
-              {activeTab === 'general' && (
-                <motion.div
-                  key="general"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="space-y-4"
-                >
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider">
-                        Camp Title
-                      </label>
-                      <input
-                        type="text"
-                        value={campDetails.title}
-                        onChange={(e) => setCampDetails({ ...campDetails, title: e.target.value })}
-                        className="border border-border rounded-xl px-4 py-2.5 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider">
-                        Camp Date
-                      </label>
-                      <input
-                        type="date"
-                        value={campDetails.date}
-                        onChange={(e) => setCampDetails({ ...campDetails, date: e.target.value })}
-                        className="border border-border rounded-xl px-4 py-2.5 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter"
-                      />
-                    </div>
-                  </div>
+              {/* Form Content body */}
+              <div className="p-6 sm:p-8 space-y-6">
+                <AnimatePresence mode="wait">
+                  {activeTab === 'general' && (
+                    <motion.div
+                      key="general-tab"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="space-y-4"
+                    >
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider">
+                            Camp Title
+                          </label>
+                          <input
+                            type="text"
+                            value={campDetails.title}
+                            onChange={(e) => setCampDetails({ ...campDetails, title: e.target.value })}
+                            className="border border-border rounded-xl px-4 py-2.5 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter"
+                          />
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider">
+                            Camp Date
+                          </label>
+                          <input
+                            type="date"
+                            value={campDetails.date}
+                            onChange={(e) => setCampDetails({ ...campDetails, date: e.target.value })}
+                            className="border border-border rounded-xl px-4 py-2.5 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter"
+                          />
+                        </div>
+                      </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider">
-                      Doctors and Specialists In Attendance
-                    </label>
-                    <input
-                      type="text"
-                      value={campDetails.doctorsText}
-                      onChange={(e) => setCampDetails({ ...campDetails, doctorsText: e.target.value })}
-                      placeholder="e.g. Dr. Rajesh, Dr. Sridhar"
-                      className="border border-border rounded-xl px-4 py-2.5 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter"
-                    />
-                  </div>
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider">
+                          Doctors and Specialists In Attendance
+                        </label>
+                        <input
+                          type="text"
+                          value={campDetails.doctorsText}
+                          onChange={(e) => setCampDetails({ ...campDetails, doctorsText: e.target.value })}
+                          placeholder="e.g. Dr. Rajesh, Dr. Sridhar"
+                          className="border border-border rounded-xl px-4 py-2.5 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter"
+                        />
+                      </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider">
-                      Camp Summary
-                    </label>
-                    <textarea
-                      value={campDetails.summaryText}
-                      onChange={(e) => setCampDetails({ ...campDetails, summaryText: e.target.value })}
-                      rows={6}
-                      className="border border-border rounded-xl p-4 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter leading-relaxed"
-                    />
-                  </div>
-                </motion.div>
-              )}
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider">
+                          Camp Summary
+                        </label>
+                        <textarea
+                          value={campDetails.summaryText}
+                          onChange={(e) => setCampDetails({ ...campDetails, summaryText: e.target.value })}
+                          rows={6}
+                          className="border border-border rounded-xl p-4 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter leading-relaxed"
+                        />
+                      </div>
+                    </motion.div>
+                  )}
 
-              {activeTab === 'stats' && (
-                <motion.div
-                  key="stats"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="grid grid-cols-2 sm:grid-cols-3 gap-5"
-                >
-                  {[
-                    { key: 'patients', label: 'Patients Count' },
-                    { key: 'male', label: 'Male Patients' },
-                    { key: 'female', label: 'Female Patients' },
-                    { key: 'bpTests', label: 'BP Tests Done' },
-                    { key: 'sugarTests', label: 'Sugar Tests Done' },
-                    { key: 'cataracts', label: 'Cataract Identified' },
-                    { key: 'volunteers', label: 'Volunteers Enlisted' },
-                    { key: 'villages', label: 'Villages Reached' }
-                  ].map((field) => (
-                    <div key={field.key} className="flex flex-col gap-1.5 bg-bg/50 p-4 border border-border rounded-2xl shadow-xs">
-                      <label className="text-[10px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider">
-                        {field.label}
-                      </label>
-                      <input
-                        type="number"
-                        value={campDetails[field.key]}
-                        onChange={(e) =>
-                          setCampDetails({ ...campDetails, [field.key]: parseInt(e.target.value, 10) || 0 })
-                        }
-                        className="border border-border bg-white rounded-lg px-3 py-1.5 text-sm font-semibold text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-poppins"
-                      />
-                    </div>
-                  ))}
-                </motion.div>
-              )}
+                  {activeTab === 'stats' && (
+                    <motion.div
+                      key="stats-tab"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="grid grid-cols-2 sm:grid-cols-3 gap-5"
+                    >
+                      {[
+                        { key: 'patients', label: 'Patients Count' },
+                        { key: 'male', label: 'Male Patients' },
+                        { key: 'female', label: 'Female Patients' },
+                        { key: 'bpTests', label: 'BP Tests Done' },
+                        { key: 'sugarTests', label: 'Sugar Tests Done' },
+                        { key: 'cataracts', label: 'Cataract Identified' },
+                        { key: 'volunteers', label: 'Volunteers Enlisted' },
+                        { key: 'villages', label: 'Villages Reached' }
+                      ].map((field) => (
+                        <div key={field.key} className="flex flex-col gap-1.5 bg-bg/50 p-4 border border-border rounded-2xl shadow-xs">
+                          <label className="text-[10px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider">
+                            {field.label}
+                          </label>
+                          <input
+                            type="number"
+                            value={campDetails[field.key]}
+                            onChange={(e) =>
+                              setCampDetails({ ...campDetails, [field.key]: parseInt(e.target.value, 10) || 0 })
+                            }
+                            className="border border-border bg-white rounded-lg px-3 py-1.5 text-sm font-semibold text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-poppins"
+                          />
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
 
-              {activeTab === 'social' && (
-                <motion.div
-                  key="social"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="space-y-6"
-                >
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider flex items-center gap-1">
-                      LinkedIn Post Caption Draft
-                    </label>
-                    <textarea
-                      value={campDetails.linkedinDraft}
-                      onChange={(e) => setCampDetails({ ...campDetails, linkedinDraft: e.target.value })}
-                      rows={5}
-                      className="border border-border rounded-xl p-4 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter leading-relaxed"
-                    />
-                  </div>
+                  {activeTab === 'social' && (
+                    <motion.div
+                      key="social-tab"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="space-y-6"
+                    >
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider flex items-center gap-1">
+                          LinkedIn Post Caption Draft
+                        </label>
+                        <textarea
+                          value={campDetails.linkedinDraft}
+                          onChange={(e) => setCampDetails({ ...campDetails, linkedinDraft: e.target.value })}
+                          rows={5}
+                          className="border border-border rounded-xl p-4 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter leading-relaxed"
+                        />
+                      </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider flex items-center gap-1">
-                      Instagram Post Caption Draft
-                    </label>
-                    <textarea
-                      value={campDetails.instagramDraft}
-                      onChange={(e) => setCampDetails({ ...campDetails, instagramDraft: e.target.value })}
-                      rows={5}
-                      className="border border-border rounded-xl p-4 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter leading-relaxed"
-                    />
-                  </div>
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider flex items-center gap-1">
+                          Instagram Post Caption Draft
+                        </label>
+                        <textarea
+                          value={campDetails.instagramDraft}
+                          onChange={(e) => setCampDetails({ ...campDetails, instagramDraft: e.target.value })}
+                          rows={5}
+                          className="border border-border rounded-xl p-4 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter leading-relaxed"
+                        />
+                      </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider flex items-center gap-1">
-                      YouTube Video Description Draft
-                    </label>
-                    <textarea
-                      value={campDetails.youtubeDraft}
-                      onChange={(e) => setCampDetails({ ...campDetails, youtubeDraft: e.target.value })}
-                      rows={5}
-                      className="border border-border rounded-xl p-4 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter leading-relaxed"
-                    />
-                  </div>
-                </motion.div>
-              )}
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider flex items-center gap-1">
+                          YouTube Video Description Draft
+                        </label>
+                        <textarea
+                          value={campDetails.youtubeDraft}
+                          onChange={(e) => setCampDetails({ ...campDetails, youtubeDraft: e.target.value })}
+                          rows={5}
+                          className="border border-border rounded-xl p-4 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter leading-relaxed"
+                        />
+                      </div>
+                    </motion.div>
+                  )}
 
-              {activeTab === 'preview' && (
-                <motion.div
-                  key="preview"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="space-y-6 max-h-[50vh] overflow-y-auto pr-2 border border-border rounded-2xl p-5 bg-bg/25"
-                >
-                  {/* Visual mockup of the generated camp page */}
-                  <div className="space-y-4">
-                    <div className="bg-primary text-white p-4 rounded-xl">
-                      <span className="text-[10px] uppercase font-bold text-white/80 block mb-1">
-                        Camp Report • {campDetails.date}
-                      </span>
-                      <h4 className="font-poppins font-bold text-lg leading-tight">{campDetails.title}</h4>
-                    </div>
+                  {activeTab === 'preview' && (
+                    <motion.div
+                      key="preview-tab"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="space-y-6 max-h-[50vh] overflow-y-auto pr-2 border border-border rounded-2xl p-5 bg-bg/25"
+                    >
+                      <div className="space-y-4">
+                        <div className="bg-primary text-white p-4 rounded-xl">
+                          <span className="text-[10px] uppercase font-bold text-white/80 block mb-1">
+                            Camp Report • {campDetails.date}
+                          </span>
+                          <h4 className="font-poppins font-bold text-lg leading-tight">{campDetails.title}</h4>
+                        </div>
 
-                    <div className="space-y-3 font-inter text-xs text-text-secondary leading-relaxed">
-                      <p><strong>Overview:</strong> {campDetails.summaryText || 'No summary text compiled.'}</p>
-                      <p><strong>Doctors Participating:</strong> {campDetails.doctorsText || 'None listed.'}</p>
-                      
-                      <div className="border-t border-border pt-3">
-                        <span className="block font-bold text-text-primary mb-2">Metrics Extracted</span>
-                        <div className="grid grid-cols-3 gap-2">
-                          <div className="bg-white border border-border p-2 rounded-lg text-center">
-                            <span className="block font-bold text-primary">{campDetails.patients}</span>
-                            <span className="text-[8px] uppercase tracking-wide text-text-secondary/60">Served</span>
-                          </div>
-                          <div className="bg-white border border-border p-2 rounded-lg text-center">
-                            <span className="block font-bold text-accent">{campDetails.bpTests}</span>
-                            <span className="text-[8px] uppercase tracking-wide text-text-secondary/60">BP Check</span>
-                          </div>
-                          <div className="bg-white border border-border p-2 rounded-lg text-center">
-                            <span className="block font-bold text-primary">{campDetails.cataracts}</span>
-                            <span className="text-[8px] uppercase tracking-wide text-text-secondary/60">Cataracts</span>
+                        <div className="space-y-3 font-inter text-xs text-text-secondary leading-relaxed">
+                          <p><strong>Overview:</strong> {campDetails.summaryText || 'No summary text compiled.'}</p>
+                          <p><strong>Doctors Participating:</strong> {campDetails.doctorsText || 'None listed.'}</p>
+                          
+                          <div className="border-t border-border pt-3">
+                            <span className="block font-bold text-text-primary mb-2">Metrics Extracted</span>
+                            <div className="grid grid-cols-3 gap-2">
+                              <div className="bg-white border border-border p-2 rounded-lg text-center">
+                                <span className="block font-bold text-primary">{campDetails.patients}</span>
+                                <span className="text-[8px] uppercase tracking-wide text-text-secondary/60">Served</span>
+                              </div>
+                              <div className="bg-white border border-border p-2 rounded-lg text-center">
+                                <span className="block font-bold text-accent">{campDetails.bpTests}</span>
+                                <span className="text-[8px] uppercase tracking-wide text-text-secondary/60">BP Check</span>
+                              </div>
+                              <div className="bg-white border border-border p-2 rounded-lg text-center">
+                                <span className="block font-bold text-primary">{campDetails.cataracts}</span>
+                                <span className="text-[8px] uppercase tracking-wide text-text-secondary/60">Cataracts</span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="list-view"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {camps.map((c) => (
+              <div key={c.id} className="bg-white border border-border rounded-3xl overflow-hidden hover:shadow-card-hover transition-all duration-400 flex flex-col justify-between h-full p-6">
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <span className="bg-bg text-primary text-[9px] font-bold px-2 py-0.5 rounded-md uppercase font-inter border border-border/50">
+                      Camp Report
+                    </span>
+                    <span className={`text-[9px] font-bold px-2 py-0.5 rounded-md uppercase font-inter ${
+                      c.status === 'published' ? 'bg-green-50 text-green-600 border border-green-200' : 'bg-orange-50 text-orange-600 border border-orange-200'
+                    }`}>
+                      {c.status || 'published'}
+                    </span>
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-      </div>
+                  <h3 className="font-poppins font-bold text-base text-text-primary leading-snug mb-2 hover:text-primary transition-colors cursor-pointer" onClick={() => handleEditClick(c)}>
+                    {c.title}
+                  </h3>
+                  <p className="text-text-secondary font-inter text-xs leading-relaxed line-clamp-3 mb-4">
+                    {c.summary}
+                  </p>
+                  <div className="text-[10px] text-text-secondary/70 font-semibold mb-6 flex flex-wrap gap-x-3 gap-y-1">
+                    <span>👥 Patients: {c.patientsServed || c.patients || 0}</span>
+                    <span>📍 {c.location}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between border-t border-border pt-4 mt-auto">
+                  <span className="text-[10px] text-text-secondary/60 font-semibold font-inter">
+                    {c.date}
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => handleEditClick(c)}
+                      className="p-2 bg-bg hover:bg-primary/5 text-text-secondary hover:text-primary border border-border rounded-xl transition-colors"
+                      title="Edit camp report"
+                    >
+                      <Edit className="w-3.5 h-3.5" />
+                    </button>
+                    {role === 'super-admin' && (
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(c.id)}
+                        className="p-2 bg-bg hover:bg-red-50 text-text-secondary/40 hover:text-red-600 border border-border rounded-xl transition-colors"
+                        title="Delete camp report"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -33,10 +33,15 @@ export default function BlogDetails() {
   const navigate = useNavigate();
 
   // Combine lists to find by slug
+  const savedCamps = localStorage.getItem('aarogya_camps');
+  const activeCamps = savedCamps ? JSON.parse(savedCamps) : campReports;
+  const publicCamps = activeCamps.filter(c => c.status === 'published' || c.status === undefined);
+
   const savedBlogs = localStorage.getItem('aarogya_blogs');
   const activeBlogs = savedBlogs ? JSON.parse(savedBlogs) : blogs;
   const publicBlogs = activeBlogs.filter(b => b.status === 'published' || b.status === undefined);
-  const allItems = [...campReports, ...publicBlogs];
+
+  const allItems = [...publicCamps, ...publicBlogs];
   const itemIndex = allItems.findIndex((x) => x.slug === slug);
   const item = allItems[itemIndex];
 
