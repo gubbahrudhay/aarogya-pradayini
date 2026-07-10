@@ -276,13 +276,14 @@ export default function CampManager() {
     summaryText: '',
     linkedinDraft: '',
     instagramDraft: '',
-    youtubeDraft: ''
+    youtubeDraft: '',
+    videoUrl: '',
+    coverImage: '',
+    gallery: []
   });
 
   const handleEditClick = (camp) => {
     setEditingCamp(camp);
-    
-    // Check if the camp report has stored rawReport, else load fallback
     setWhatsappText(camp.rawReport || sampleReport);
 
     const editorFields = camp.editorFields || {
@@ -302,7 +303,10 @@ export default function CampManager() {
       summaryText: camp.summary,
       linkedinDraft: camp.linkedinDraft || '',
       instagramDraft: camp.instagramDraft || '',
-      youtubeDraft: camp.youtubeDraft || ''
+      youtubeDraft: camp.youtubeDraft || '',
+      videoUrl: camp.videoUrl || '',
+      coverImage: camp.coverImage || '',
+      gallery: camp.gallery || []
     };
     setCampDetails(editorFields);
     setSuccessMsg('');
@@ -327,7 +331,10 @@ export default function CampManager() {
       summaryText: '',
       linkedinDraft: '',
       instagramDraft: '',
-      youtubeDraft: ''
+      youtubeDraft: '',
+      videoUrl: '',
+      coverImage: '',
+      gallery: []
     });
     setWhatsappText(sampleReport);
     setSuccessMsg('');
@@ -357,6 +364,66 @@ export default function CampManager() {
     }
   };
 
+  const handleImageUpload = async (e, type = 'gallery') => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setLoading(true);
+    setSuccessMsg('');
+
+    try {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const base64Data = reader.result;
+        
+        // Extract month and year from camp date
+        const campDate = campDetails.date ? new Date(campDetails.date) : new Date();
+        const months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+        const monthStr = months[campDate.getMonth()];
+        const yearStr = campDate.getFullYear().toString();
+
+        // Call /api/upload uploader handler
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            fileContent: base64Data,
+            filename: file.name,
+            month: monthStr,
+            year: yearStr
+          })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to upload image to GitHub');
+        }
+
+        const uploadedUrl = data.url;
+
+        // Update state fields
+        if (type === 'cover') {
+          setCampDetails(prev => ({ ...prev, coverImage: uploadedUrl }));
+          setSuccessMsg('Cover image uploaded successfully to GitHub!');
+        } else {
+          setCampDetails(prev => ({
+            ...prev,
+            gallery: [...(prev.gallery || []), uploadedUrl]
+          }));
+          setSuccessMsg('Gallery image added successfully to GitHub!');
+        }
+        setLoading(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      console.error('Image upload error:', err);
+      setSuccessMsg(`Image upload failed: ${err.message || err}`);
+      setLoading(false);
+    }
+  };
+
   const handleAIParse = async () => {
     setLoading(true);
     setSuccessMsg('');
@@ -369,7 +436,13 @@ export default function CampManager() {
       if (!apiKey || apiKey === 'YOUR_API_KEY') {
         // Fallback simulation
         setTimeout(() => {
-          setCampDetails(parsedDetails);
+          setCampDetails(prev => ({
+            ...prev,
+            ...parsedDetails,
+            videoUrl: prev.videoUrl,
+            coverImage: prev.coverImage,
+            gallery: prev.gallery
+          }));
           setLoading(false);
           setSuccessMsg('AI successfully extracted statistics and drafted social media posts (local fallback)!');
           setActiveTab('general');
@@ -455,7 +528,8 @@ Do not add markdown formatting or wrappers like \`\`\`json.`;
       text = text.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
       const parsed = JSON.parse(text);
 
-      setCampDetails({
+      setCampDetails(prev => ({
+        ...prev,
         title: parsed.title || parsedDetails.title,
         date: parsed.date || parsedDetails.date,
         location: parsed.location || parsedDetails.location,
@@ -473,14 +547,17 @@ Do not add markdown formatting or wrappers like \`\`\`json.`;
         linkedinDraft: parsed.linkedinDraft || parsedDetails.linkedinDraft,
         instagramDraft: parsed.instagramDraft || parsedDetails.instagramDraft,
         youtubeDraft: parsed.youtubeDraft || parsedDetails.youtubeDraft
-      });
+      }));
 
       setSuccessMsg('AI successfully extracted statistics and drafted social media posts via Gemini API!');
       setActiveTab('general');
     } catch (err) {
       console.error('Gemini generateContent error in CampManager:', err);
       // Fallback using robust regex parsing
-      setCampDetails(parsedDetails);
+      setCampDetails(prev => ({
+        ...prev,
+        ...parsedDetails
+      }));
       setSuccessMsg('AI extraction failed, loaded local fallback details successfully.');
       setActiveTab('general');
     } finally {
@@ -513,7 +590,7 @@ Do not add markdown formatting or wrappers like \`\`\`json.`;
         month: new Date(campDetails.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
         date: new Date(campDetails.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
         location: campDetails.location || 'Sai Baba Temple Altar, Kalwakurthy',
-        coverImage: 'imgRegistration', // Default to matching variable
+        coverImage: campDetails.coverImage || 'imgRegistration',
         patientsServed: campDetails.patients,
         summary: campDetails.summaryText,
         stats: statsArray,
@@ -529,8 +606,8 @@ Do not add markdown formatting or wrappers like \`\`\`json.`;
             author: 'Kalwakurthy Villager'
           }
         ],
-        gallery: ['imgEye', 'imgConsultation', 'imgVital', 'imgLab', 'imgMedicine', 'imgTeam'],
-        videoUrl: '',
+        gallery: campDetails.gallery && campDetails.gallery.length > 0 ? campDetails.gallery : ['imgEye', 'imgConsultation', 'imgVital', 'imgLab', 'imgMedicine', 'imgTeam'],
+        videoUrl: campDetails.videoUrl || '',
         status: publish ? 'published' : 'draft',
         rawReport: whatsappText,
         // Preserve editor fields for admin re-editing
@@ -548,6 +625,9 @@ Do not add markdown formatting or wrappers like \`\`\`json.`;
         summary: campDetails.summaryText,
         stats: statsArray,
         doctors: (campDetails.doctorsText || 'Dr. Rajesh Gubba, Dr. Sridhar').split(',').map(d => ({ name: d.trim(), role: 'Medical Specialist' })),
+        coverImage: campDetails.coverImage,
+        videoUrl: campDetails.videoUrl,
+        gallery: campDetails.gallery,
         status: publish ? 'published' : 'draft',
         rawReport: whatsappText,
         editorFields: { ...campDetails }
@@ -768,9 +848,96 @@ Do not add markdown formatting or wrappers like \`\`\`json.`;
                         <textarea
                           value={campDetails.summaryText}
                           onChange={(e) => setCampDetails({ ...campDetails, summaryText: e.target.value })}
-                          rows={6}
+                          rows={4}
                           className="border border-border rounded-xl p-4 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter leading-relaxed"
                         />
+                      </div>
+
+                      {/* Media & Links Integration */}
+                      <div className="flex flex-col gap-1.5 border-t border-border pt-6 mt-6">
+                        <h3 className="font-poppins font-bold text-sm text-text-primary flex items-center gap-2 mb-2">
+                          <span className="w-1.5 h-3.5 bg-primary rounded-full" />
+                          Media & Video Links
+                        </h3>
+                        
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider">
+                            YouTube Video Link
+                          </label>
+                          <input
+                            type="text"
+                            value={campDetails.videoUrl || ''}
+                            onChange={(e) => setCampDetails({ ...campDetails, videoUrl: e.target.value })}
+                            placeholder="e.g. https://youtube.com/watch?v=..."
+                            className="border border-border rounded-xl px-4 py-2.5 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider">
+                              Cover Image URL
+                            </label>
+                            <input
+                              type="text"
+                              value={campDetails.coverImage || ''}
+                              onChange={(e) => setCampDetails({ ...campDetails, coverImage: e.target.value })}
+                              placeholder="e.g. https://raw.githubusercontent.com/... or uploaded path"
+                              className="border border-border rounded-xl px-4 py-2.5 text-xs text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-inter mb-2"
+                            />
+                            <label className="flex items-center justify-center gap-1.5 bg-bg border border-border hover:bg-primary/5 text-text-secondary hover:text-primary px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-colors">
+                              <span>Upload Cover Photo</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleImageUpload(e, 'cover')}
+                                className="hidden"
+                              />
+                            </label>
+                          </div>
+
+                          {campDetails.coverImage && (
+                            <div className="flex flex-col gap-1">
+                              <label className="text-[10px] font-bold text-text-secondary/50 uppercase font-inter">Cover Preview</label>
+                              <div className="border border-border rounded-2xl overflow-hidden aspect-video relative bg-bg max-w-[200px]">
+                                <img src={campDetails.coverImage} alt="Cover Preview" className="w-full h-full object-cover" />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex flex-col gap-1.5 mt-4">
+                          <label className="text-[11px] font-bold text-text-secondary/70 uppercase font-inter tracking-wider">
+                            Gallery Images
+                          </label>
+                          <div className="flex flex-wrap gap-3 mb-2">
+                            {(campDetails.gallery || []).map((img, idx) => (
+                              <div key={idx} className="relative w-16 h-16 border border-border rounded-xl overflow-hidden group shadow-xs">
+                                <img src={img} alt="Gallery Preview" className="w-full h-full object-cover" />
+                                <button
+                                  type="button"
+                                  onClick={() => setCampDetails(prev => ({
+                                    ...prev,
+                                    gallery: prev.gallery.filter((_, i) => i !== idx)
+                                  }))}
+                                  className="absolute inset-0 bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold"
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            ))}
+                            <label className="w-16 h-16 flex flex-col items-center justify-center bg-bg border border-dashed border-border rounded-xl hover:border-primary hover:bg-primary/5 text-text-secondary hover:text-primary cursor-pointer transition-colors">
+                              <span className="text-lg font-bold leading-none">+</span>
+                              <span className="text-[9px] font-semibold mt-1">Upload</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleImageUpload(e, 'gallery')}
+                                className="hidden"
+                              />
+                            </label>
+                          </div>
+                        </div>
                       </div>
                     </motion.div>
                   )}
@@ -876,6 +1043,10 @@ Do not add markdown formatting or wrappers like \`\`\`json.`;
                           <p><strong>Overview:</strong> {campDetails.summaryText || 'No summary text compiled.'}</p>
                           <p><strong>Doctors Participating:</strong> {campDetails.doctorsText || 'None listed.'}</p>
                           
+                          {campDetails.videoUrl && (
+                            <p><strong>Video Link Attached:</strong> <span className="text-primary underline">{campDetails.videoUrl}</span></p>
+                          )}
+
                           <div className="border-t border-border pt-3">
                             <span className="block font-bold text-text-primary mb-2">Metrics Extracted</span>
                             <div className="grid grid-cols-3 gap-2">
