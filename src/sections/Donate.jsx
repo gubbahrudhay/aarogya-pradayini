@@ -138,22 +138,22 @@ export default function Donate() {
               </div>
             </div> */}
 
-            <p className="text-center text-text-secondary text-sm font-inter mb-6">
+            {/* <p className="text-center text-text-secondary text-sm font-inter mb-6">
               After donating, please{' '}
               <Link to="/contact" className="text-primary font-semibold hover:underline">
                 contact us
               </Link>{' '}
               with your receipt for acknowledgment.
-            </p>
+            </p> */}
 
-            <Link
-              to="/donate"
+            <a
+              href="mailto:srisatyasaiaarogyapradayini@gmail.com?subject=Donation%20Inquiry%20-%20Aarogya%20Pradayini"
               id="donate-section-btn"
               className="flex items-center justify-center gap-2 btn-primary w-full text-center"
             >
               Learn More About Donating
               <ArrowRight className="w-5 h-5" />
-            </Link>
+            </a>
           </motion.div>
         </div>
       </div>

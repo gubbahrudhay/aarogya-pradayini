@@ -53,21 +53,32 @@ export default function ContactPage() {
 
               <div className="space-y-5 mb-10">
                 {[
-                  { icon: MapPin, title: 'Address', lines: ['Kalwakurthy, Nagarkurnool District', 'Telangana – 509 324, India'] },
-                  { icon: Phone, title: 'Phone', lines: ['+91 94925 02927', 'Mon–Sat, 9 AM – 6 PM'] },
-                  { icon: Mail, title: 'Email', lines: ['srisatyasaiaarogyapradayini@gmail.com', 'We reply within 24 hours'] },
+                  { icon: MapPin, title: 'Address', lines: ['Kalwakurthy, Nagarkurnool District', 'Telangana – 509 324, India'], href: 'https://maps.google.com/?q=Kalwakurthy,Telangana,India' },
+                  { icon: Phone, title: 'Phone', lines: ['+91 94925 02927', 'Mon–Sat, 9 AM – 6 PM'], href: 'tel:+919492502927' },
+                  { icon: Mail, title: 'Email', lines: ['srisatyasaiaarogyapradayini@gmail.com', 'We reply within 24 hours'], href: 'mailto:srisatyasaiaarogyapradayini@gmail.com' },
                   { icon: Clock, title: 'Camp Hours', lines: ['Every 2nd Sunday, 9 AM – 12 PM', 'Kalwakurthy central location'] },
-                ].map(({ icon: Icon, title, lines }) => (
-                  <motion.div key={title} variants={fadeUp} className="flex items-start gap-4 bg-white rounded-2xl p-5 border border-border">
-                    <div className="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <Icon className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-poppins font-semibold text-text-primary mb-1">{title}</p>
-                      {lines.map((l) => <p key={l} className="text-text-secondary text-sm font-inter">{l}</p>)}
-                    </div>
-                  </motion.div>
-                ))}
+                ].map(({ icon: Icon, title, lines, href }) => {
+                  const CardWrapper = href ? 'a' : 'div';
+                  return (
+                    <CardWrapper
+                      key={title}
+                      href={href}
+                      target={href && href.startsWith('http') ? '_blank' : undefined}
+                      rel={href && href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      className={`flex items-start gap-4 bg-white rounded-2xl p-5 border border-border transition-all duration-300 ${href ? 'hover:border-primary hover:shadow-sm cursor-pointer' : ''}`}
+                    >
+                      <div className="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <Icon className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-poppins font-semibold text-text-primary mb-1">{title}</p>
+                        {lines.map((l) => (
+                          <p key={l} className={`text-text-secondary text-sm font-inter ${href && (l.includes('+91') || l.includes('@')) ? 'text-primary font-semibold hover:underline' : ''}`}>{l}</p>
+                        ))}
+                      </div>
+                    </CardWrapper>
+                  );
+                })}
               </div>
 
               {/* Map */}
