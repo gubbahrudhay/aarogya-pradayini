@@ -56,7 +56,7 @@ export default function ContactPage() {
                   { icon: MapPin, title: 'Address', lines: ['Kalwakurthy, Nagarkurnool District', 'Telangana – 509 324, India'], href: 'https://maps.google.com/?q=Kalwakurthy,Telangana,India' },
                   { icon: Phone, title: 'Phone', lines: ['+91 94925 02927', 'Mon–Sat, 9 AM – 6 PM'], href: 'tel:+919492502927' },
                   { icon: Mail, title: 'Email', lines: ['srisatyasaiaarogyapradayini@gmail.com', 'We reply within 24 hours'], href: 'mailto:srisatyasaiaarogyapradayini@gmail.com' },
-                  { icon: Clock, title: 'Camp Hours', lines: ['Every 2nd Sunday, 9 AM – 12 PM', 'Kalwakurthy central location'] },
+                  { icon: Clock, title: 'Camp Hours', lines: ['Every 2nd Sunday, 9 AM – 1 PM', 'Kalwakurthy central location'] },
                 ].map(({ icon: Icon, title, lines, href }) => {
                   const CardWrapper = href ? 'a' : 'div';
                   return (

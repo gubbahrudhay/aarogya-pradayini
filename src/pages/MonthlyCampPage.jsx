@@ -139,8 +139,8 @@ export default function MonthlyCampPage() {
                   <div className="flex gap-3">
                     <Clock className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-[10px] font-bold text-text-secondary/60 uppercase tracking-wider font-inter">Timings</p>
-                      <p className="text-xs font-bold text-text-primary">10:00 AM - 2:00 PM</p>
+                       <p className="text-[10px] font-bold text-text-secondary/60 uppercase tracking-wider font-inter">Timings</p>
+                       <p className="text-xs font-bold text-text-primary">9:00 AM - 1:00 PM</p>
                     </div>
                   </div>
 
