@@ -5,7 +5,7 @@ const steps = [
   {
     icon: Calendar,
     title: 'Every 2nd Sunday',
-    desc: 'Held consistently on the second Sunday of every month without fail — rain or shine.',
+    desc: 'Held consistently on the second Sunday of every month from 9:00 AM to 1:00 PM without fail — rain or shine.',
     color: 'bg-blue-500',
     num: '01',
   },

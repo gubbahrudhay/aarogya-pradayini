@@ -4,7 +4,7 @@ import { ArrowRight, Calendar, MapPin, Users } from 'lucide-react';
 import heroBg from '../assets/images/camp_registration_queue.jpeg';
 
 const badges = [
-  { icon: Calendar, label: 'Every 2nd Sunday' },
+  { icon: Calendar, label: 'Every 2nd Sunday (9 AM - 1 PM)' },
   { icon: MapPin, label: 'Kalwakurthy' },
   { icon: Users, label: 'Free for All' },
 ];
