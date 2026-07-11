@@ -120,7 +120,7 @@ export default function Donate() {
             </p>
 
             {/* Bank Details */}
-            <div className="bg-white rounded-2xl p-6 border border-border mb-6">
+            {/* <div className="bg-white rounded-2xl p-6 border border-border mb-6">
               <p className="font-poppins font-semibold text-text-primary mb-4">Bank Transfer</p>
               <div className="space-y-3 text-sm font-inter">
                 {[
@@ -136,7 +136,7 @@ export default function Donate() {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
 
             <p className="text-center text-text-secondary text-sm font-inter mb-6">
               After donating, please{' '}
