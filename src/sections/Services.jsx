@@ -42,7 +42,7 @@ export default function Services() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
           variants={stagger}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
         >
           {services.map((service) => {
             const Icon = service.icon;

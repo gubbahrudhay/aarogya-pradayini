@@ -5,7 +5,6 @@ import Services from '../sections/Services';
 import MonthlyCamp from '../sections/MonthlyCamp';
 import Impact from '../sections/Impact';
 import Gallery from '../sections/Gallery';
-import Testimonials from '../sections/Testimonials';
 import VolunteerCTA from '../sections/VolunteerCTA';
 import Donate from '../sections/Donate';
 import SEO from '../components/SEO';
@@ -23,7 +22,6 @@ export default function Home() {
       <MonthlyCamp />
       <Impact />
       <Gallery />
-      <Testimonials />
       <VolunteerCTA />
       <Donate />
     </>
