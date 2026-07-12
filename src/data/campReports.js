@@ -13,7 +13,7 @@ export const campReports = [
     "id": "camp-sri-sathya-sai-aarogya-pradayini-free-medical-camp",
     "slug": "sri-sathya-sai-aarogya-pradayini-free-medical-camp",
     "type": "camp-report",
-    "title": "Sri Sathya Sai Aarogya Pradayini Free Medical Camp",
+    "title": "Sri Sathya Sai Aarogya Pradayini Free Medical Camp(July 2026)",
     "month": "July 2026",
     "date": "July 12, 2026",
     "location": "Kalwakurthy, Nagarkurnool Dist, Telangana",
@@ -120,7 +120,7 @@ export const campReports = [
     "status": "published",
     "rawReport": "*🌹Om Sri Sai Ram🌹*\n*Sri Sathya Sai Aarogya Pradayini *\n*Sri Sathya Sai Free Medical Camp*\n*53 Medical Camp - 12th July 2026 (Every 2nd Sunday)*\nLoving Sairam! \nWith Bhagawan Baba’s blessings conducted 53 Free Medical Camp at Kalwakurthy, Nagarkurnool Dist, Telangana\n1. 12-07-2026 Sri Sathya Sai Aarogya Pradayini free Medical camp was conducted at Kalwakurthy. Started with Omkaram at 7.30am\n2. A Total of 507*( 183 male +  324 female)* patients availed the camp including the eye camp. 10 cataract cases have been registered for surgeries.\n3.  1. Dr. Krishna Veramalla \n     2. Dr. Rajesh Gubba\n     3. Dr. Chandrakanth Chithanuri \n     4. Dr. Sai Charan Gubba\n     5. Dr. Shushma Chithanuri \n     6. Dr. Sowmya \n     7. Dr. Harish and \n     8. Dr. Sridhar (Eye specialist ) examined and prescribed the medicines.\n4.  Total 83 villages covered. \n5.  We have done 298 Sugar tests (Blood sample collection  & GRBS) and 478 BP tests\n6. Given medicines for one month BP & Sugar patients and for others patients  week medicines.\n7. 49 Spects distributed and 10 cataract cases have been registered for surgeries.\n8. 29 members of Sevadal participated in the Camp from Kalwakurthy Samithi.\n9. Bhagawan Prasadam ( Full meals) provided to all. The camp closed at 3.15pm\n-Team, Sri Sathya Sai Seva Samithi,\n *Kalwakurthy* , Nagarkurnool Dist, Telangana.",
     "editorFields": {
-      "title": "Sri Sathya Sai Aarogya Pradayini Free Medical Camp",
+      "title": "Sri Sathya Sai Aarogya Pradayini Free Medical Camp(July 2026)",
       "date": "2026-07-12",
       "location": "Kalwakurthy, Nagarkurnool Dist, Telangana",
       "status": "draft",
