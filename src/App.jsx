@@ -115,6 +115,22 @@ function AppRoutes() {
 }
 
 export default function App() {
+  // Dynamic schema migrations: if cached localStorage databases contain old stats (e.g., Cardiology or General Medicine),
+  // clear them to fetch the fresh correct layout from the new bundled default datasets.
+  try {
+    const savedCamps = localStorage.getItem('aarogya_camps');
+    if (savedCamps) {
+      const parsed = JSON.parse(savedCamps);
+      const hasOldStats = parsed.some(c => c.stats?.some(s => s.label === 'Cardiology' || s.label === 'General Medicine'));
+      if (hasOldStats) {
+        localStorage.removeItem('aarogya_camps');
+        localStorage.removeItem('aarogya_blogs');
+      }
+    }
+  } catch (e) {
+    console.error('Migration error resetting localStorage stats:', e);
+  }
+
   return (
     <HelmetProvider>
       <AuthProvider>
