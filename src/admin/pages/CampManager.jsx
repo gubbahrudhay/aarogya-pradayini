@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { campReports as initialCamps } from '../../data/campReports';
+import { compressAndConvertToWebP } from '../utils/imageCompressor';
 import {
   FileText,
   Sparkles,
@@ -374,88 +375,70 @@ export default function CampManager() {
     try {
       if (type === 'cover') {
         const file = files[0];
-        const reader = new FileReader();
-        reader.onloadend = async () => {
-          const base64Data = reader.result;
-          
-          // Extract month and year from camp date
-          const campDate = campDetails.date ? new Date(campDetails.date) : new Date();
-          const months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
-          const monthStr = months[campDate.getMonth()];
-          const yearStr = campDate.getFullYear().toString();
+        setSuccessMsg('Compressing cover image...');
+        const base64Data = await compressAndConvertToWebP(file);
+        
+        // Extract month and year from camp date
+        const campDate = campDetails.date ? new Date(campDetails.date) : new Date();
+        const months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+        const monthStr = months[campDate.getMonth()];
+        const yearStr = campDate.getFullYear().toString();
 
-          try {
-            // Call /api/upload uploader handler
-            const response = await fetch('/api/upload', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                fileContent: base64Data,
-                filename: file.name,
-                month: monthStr,
-                year: yearStr
-              })
-            });
+        setSuccessMsg('Uploading cover image...');
+        // Call /api/upload uploader handler
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            fileContent: base64Data,
+            filename: file.name.replace(/\.[^/.]+$/, "") + ".webp",
+            month: monthStr,
+            year: yearStr
+          })
+        });
 
-            const data = await response.json();
-            if (!response.ok) {
-              throw new Error(data.error || 'Failed to upload image to GitHub');
-            }
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to upload image to GitHub');
+        }
 
-            setCampDetails(prev => ({ ...prev, coverImage: data.url }));
-            setSuccessMsg('Cover image uploaded successfully to GitHub!');
-          } catch (err) {
-            setSuccessMsg(`Cover upload failed: ${err.message || err}`);
-          } finally {
-            setLoading(false);
-          }
-        };
-        reader.readAsDataURL(file);
+        setCampDetails(prev => ({ ...prev, coverImage: data.url }));
+        setSuccessMsg('Cover image uploaded successfully to GitHub!');
+        setLoading(false);
       } else {
         // Upload multiple files for gallery sequentially to avoid git race conditions
         const uploadedUrls = [];
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
+          setSuccessMsg(`Compressing image ${i + 1} of ${files.length}...`);
+          const base64Data = await compressAndConvertToWebP(file);
+
           setSuccessMsg(`Uploading image ${i + 1} of ${files.length}...`);
-          const url = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = async () => {
-              const base64Data = reader.result;
-              const campDate = campDetails.date ? new Date(campDetails.date) : new Date();
-              const months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
-              const monthStr = months[campDate.getMonth()];
-              const yearStr = campDate.getFullYear().toString();
+          const campDate = campDetails.date ? new Date(campDetails.date) : new Date();
+          const months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+          const monthStr = months[campDate.getMonth()];
+          const yearStr = campDate.getFullYear().toString();
 
-              try {
-                const response = await fetch('/api/upload', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                    fileContent: base64Data,
-                    filename: file.name,
-                    month: monthStr,
-                    year: yearStr
-                  })
-                });
-
-                const data = await response.json();
-                if (!response.ok) {
-                  reject(new Error(data.error || `Failed to upload ${file.name}`));
-                } else {
-                  resolve(data.url);
-                }
-              } catch (err) {
-                reject(err);
-              }
-            };
-            reader.onerror = () => reject(new Error(`Failed to read ${file.name}`));
-            reader.readAsDataURL(file);
+          const response = await fetch('/api/upload', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              fileContent: base64Data,
+              filename: file.name.replace(/\.[^/.]+$/, "") + ".webp",
+              month: monthStr,
+              year: yearStr
+            })
           });
-          uploadedUrls.push(url);
+
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || `Failed to upload ${file.name}`);
+          }
+          uploadedUrls.push(data.url);
         }
 
         setCampDetails(prev => ({
