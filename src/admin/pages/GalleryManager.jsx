@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { UploadCloud, CheckCircle, Database, GitBranch, Trash2, Calendar, FileImage } from 'lucide-react';
 import { db, isMock } from '../services/firebase';
 import { collection, getDocs, addDoc, doc, deleteDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
-import { compressAndConvertToWebP } from '../utils/imageCompressor';
+import { compressAndConvertToJPEG } from '../utils/imageCompressor';
 import { photos as initialPhotos } from '../../data/gallery';
 
 export default function GalleryManager() {
@@ -73,16 +73,16 @@ export default function GalleryManager() {
       for (let index = 0; index < selectedFiles.length; index++) {
         const file = selectedFiles[index];
         
-        // 1. Compress image to highly optimized WebP format client-side
-        const base64WebP = await compressAndConvertToWebP(file);
+        // 1. Compress image to highly optimized JPEG format client-side
+        const base64JPEG = await compressAndConvertToJPEG(file);
         const cleanNameLabel = newImageMeta.alt.toLowerCase().replace(/[^a-z0-9]+/g, '_');
-        const filename = `${cleanNameLabel}_${Date.now()}_${index + 1}.webp`;
+        const filename = `${cleanNameLabel}_${Date.now()}_${index + 1}.jpeg`;
 
         let imageUrl = '';
 
         if (isMock) {
           // Mock mode: use the compressed base64 local preview
-          imageUrl = base64WebP;
+          imageUrl = base64JPEG;
         } else {
           // 2. Commit compressed image base64 directly to GitHub repository via serverless API
           const response = await fetch('/api/upload', {
@@ -91,7 +91,7 @@ export default function GalleryManager() {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              fileContent: base64WebP,
+              fileContent: base64JPEG,
               filename,
               month: newImageMeta.month,
               year: newImageMeta.year
