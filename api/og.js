@@ -80,16 +80,17 @@ function resolveImageUrl(image) {
   if (assetImageMap[image]) {
     return `${SITE_URL}${assetImageMap[image]}`;
   }
-  if (image.startsWith('/')) {
-    return `${SITE_URL}${image}`;
-  }
   
-  // Try matching by substring (e.g. from bundled assets)
+  // Try matching by substring first (e.g. from Vite-bundled assets /src/assets/images/...)
   const lower = image.toLowerCase();
   for (const [key, value] of Object.entries(assetImageMap)) {
     if (lower.includes(key.toLowerCase()) || lower.includes(value.replace('/og/', '').replace('.jpeg', ''))) {
       return `${SITE_URL}${value}`;
     }
+  }
+
+  if (image.startsWith('/')) {
+    return `${SITE_URL}${image}`;
   }
   
   return `${SITE_URL}/og/camp_registration_queue.jpeg`;

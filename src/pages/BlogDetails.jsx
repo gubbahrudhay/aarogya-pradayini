@@ -81,7 +81,6 @@ export default function BlogDetails() {
     if (navigator.share) {
       navigator.share({
         title: item.title,
-        text: item.summary,
         url: shareUrl
       }).catch((err) => console.log(err));
     } else {
