@@ -58,8 +58,45 @@ const pageMeta = {
   }
 };
 
+const assetImageMap = {
+  imgRegistration: '/og/camp_registration_queue.jpeg',
+  imgConsultation: '/og/camp_consultation_hall.jpeg',
+  imgEye: '/og/camp_eye_screening.jpeg',
+  imgVital: '/og/camp_vital_signs.jpeg',
+  imgLab: '/og/camp_lab_diagnostics.jpeg',
+  imgMedicine: '/og/camp_doctor_consultation.jpeg',
+  imgTeam: '/og/camp_registration_queue.jpeg',
+  imgAwareness: '/og/camp_health_awareness.jpeg',
+  imgDoctor: '/og/camp_doctor_consultation.jpeg'
+};
+
+function resolveImageUrl(image) {
+  if (!image) {
+    return `${SITE_URL}/og/camp_registration_queue.jpeg`;
+  }
+  if (image.startsWith('http://') || image.startsWith('https://')) {
+    return image;
+  }
+  if (assetImageMap[image]) {
+    return `${SITE_URL}${assetImageMap[image]}`;
+  }
+  if (image.startsWith('/')) {
+    return `${SITE_URL}${image}`;
+  }
+  
+  // Try matching by substring (e.g. from bundled assets)
+  const lower = image.toLowerCase();
+  for (const [key, value] of Object.entries(assetImageMap)) {
+    if (lower.includes(key.toLowerCase()) || lower.includes(value.replace('/og/', '').replace('.jpeg', ''))) {
+      return `${SITE_URL}${value}`;
+    }
+  }
+  
+  return `${SITE_URL}/og/camp_registration_queue.jpeg`;
+}
+
 export default function handler(req, res) {
-  const { slug, page } = req.query;
+  const { slug, page, title, summary, image } = req.query;
 
   let meta = null;
   let pageUrl = '';
@@ -73,12 +110,23 @@ export default function handler(req, res) {
     imageUrl = `${SITE_URL}${meta.image}`;
     pageUrl = `${SITE_URL}${meta.path}`;
     ogType = 'website';
-  } else if (slug && blogMeta[slug]) {
-    meta = blogMeta[slug];
-    fullTitle = `${meta.title} | Sri Satya Sai Aarogya Pradayini`;
-    imageUrl = `${SITE_URL}${meta.image}`;
-    pageUrl = `${SITE_URL}/blog/${slug}`;
-    ogType = 'article';
+  } else if (slug) {
+    if (title && summary && image) {
+      meta = {
+        title: title,
+        description: summary,
+        image: image
+      };
+    } else if (blogMeta[slug]) {
+      meta = blogMeta[slug];
+    }
+
+    if (meta) {
+      fullTitle = `${meta.title} | Sri Satya Sai Aarogya Pradayini`;
+      imageUrl = resolveImageUrl(meta.image);
+      pageUrl = `${SITE_URL}/blog/${slug}`;
+      ogType = 'article';
+    }
   }
 
   if (!meta) {

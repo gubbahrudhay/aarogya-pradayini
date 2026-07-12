@@ -74,7 +74,8 @@ export default function BlogDetails() {
 
   // Share the OG API URL so social media crawlers get proper cover image previews
   // The API page auto-redirects real users to the actual blog page
-  const shareUrl = `${window.location.origin}/api/og?slug=${item.slug}`;
+  const cleanSummary = item.summary.length > 150 ? item.summary.substring(0, 147) + '...' : item.summary;
+  const shareUrl = `${window.location.origin}/api/og?slug=${item.slug}&title=${encodeURIComponent(item.title)}&summary=${encodeURIComponent(cleanSummary)}&image=${encodeURIComponent(item.coverImage)}`;
 
   const handleShare = () => {
     if (navigator.share) {
