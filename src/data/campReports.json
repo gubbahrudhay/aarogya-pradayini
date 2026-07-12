@@ -1,0 +1,286 @@
+[
+  {
+    "id": "camp-sri-sathya-sai-aarogya-pradayini-free-medical-camp",
+    "slug": "sri-sathya-sai-aarogya-pradayini-free-medical-camp",
+    "type": "camp-report",
+    "title": "Sri Sathya Sai Aarogya Pradayini Free Medical Camp(July 2026)",
+    "month": "July 2026",
+    "date": "July 12, 2026",
+    "location": "Kalwakurthy, Nagarkurnool Dist, Telangana",
+    "coverImage": "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872395718_whatsapp_image_2026_07_12_at_9.33.21_pm.webp",
+    "patientsServed": 507,
+    "summary": "The 53rd Sri Sathya Sai Aarogya Pradayini Free Medical Camp, held on July 12, 2026, at Kalwakurthy, Nagarkurnool Dist, Telangana, successfully served 507 patients from 83 villages. The camp provided vital health screenings, including 298 sugar tests and 478 BP tests, and registered 10 cataract cases for surgery. This impactful event was made possible by the dedicated service of 8 doctors and 29 volunteers, ensuring essential medical care reached those in need.",
+    "stats": [
+      {
+        "label": "Total Patients",
+        "value": 507
+      },
+      {
+        "label": "Eye Screening",
+        "value": 60
+      },
+      {
+        "label": "Cataract Surgery Registered",
+        "value": 10
+      },
+      {
+        "label": "Spectacles Distributed",
+        "value": 49
+      },
+      {
+        "label": "Blood Sugar Tests",
+        "value": 298
+      },
+      {
+        "label": "BP Checks",
+        "value": 478
+      }
+    ],
+    "doctors": [
+      {
+        "name": "Dr. Krishna Veramalla",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Rajesh Gubba",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Chandrakanth Chithanuri",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Sai Charan Gubba",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Shushma Chithanuri",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Sowmya",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Harish",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Sridhar (Eye specialist)",
+        "role": "Medical Specialist"
+      }
+    ],
+    "highlights": [
+      "Successfully served 507 patients from 83 surrounding villages.",
+      "Identified 10 cataract cases scheduled for free surgery.",
+      "Conducted 478 blood pressure checks and 298 sugar tests."
+    ],
+    "testimonials": [
+      {
+        "quote": "We appreciate the selfless service of all doctors and volunteers who help our village every month.",
+        "author": "Kalwakurthy Villager"
+      }
+    ],
+    "gallery": [
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872263990_whatsapp_image_2026_07_12_at_9.33.22_pm_10_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872271008_whatsapp_image_2026_07_12_at_9.33.22_pm_9_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872273107_whatsapp_image_2026_07_12_at_9.33.22_pm_8_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872274741_whatsapp_image_2026_07_12_at_9.33.22_pm_7_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872277019_whatsapp_image_2026_07_12_at_9.33.22_pm_6_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872278715_whatsapp_image_2026_07_12_at_9.33.22_pm_5_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872280717_whatsapp_image_2026_07_12_at_9.33.22_pm_4_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872282798_whatsapp_image_2026_07_12_at_9.33.22_pm_3_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872290399_whatsapp_image_2026_07_12_at_9.33.22_pm_2_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872292364_whatsapp_image_2026_07_12_at_9.33.22_pm_1_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872299624_whatsapp_image_2026_07_12_at_9.33.22_pm.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872301835_whatsapp_image_2026_07_12_at_9.33.21_pm_2_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872304084_whatsapp_image_2026_07_12_at_9.33.21_pm_1_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872306592_whatsapp_image_2026_07_12_at_9.33.21_pm.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872332456_whatsapp_image_jul_12_2026_8_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872335027_whatsapp_image_jul_12_2026_7_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872337055_whatsapp_image_jul_12_2026_6_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872339308_whatsapp_image_jul_12_2026_5_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872341310_whatsapp_image_jul_12_2026_4_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872343278_whatsapp_image_jul_12_2026_3_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872345280_whatsapp_image_jul_12_2026_2_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872347835_whatsapp_image_jul_12_2026_1_.webp",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/june/1783872350181_whatsapp_image_jul_12_2026.webp"
+    ],
+    "videoUrl": "https://youtube.com/shorts/jtd1chRnVpI?feature=share",
+    "status": "published"
+  },
+  {
+    "id": "camp-sri-sathya-sai-free-medical-camp",
+    "slug": "sri-sathya-sai-free-medical-camp",
+    "type": "camp-report",
+    "title": "May 2026 Free Medical Camp",
+    "month": "May 2026",
+    "date": "May 10, 2026",
+    "location": "Kalwakurthy",
+    "coverImage": "imgRegistration",
+    "patientsServed": 442,
+    "summary": "The 51st Sri Sathya Sai Free Medical Camp, held on May 10, 2026, in Kalwakurthy, Nagarkurnool Dist, Telangana, successfully provided vital healthcare services to 442 patients from 74 villages. The camp included comprehensive screenings with 252 sugar tests and 386 BP tests, along with distributing essential medicines. A dedicated team of 8 doctors and 21 volunteers facilitated the camp, which also identified 18 cataract cases for surgery, demonstrating a significant community health impact.",
+    "stats": [
+      {
+        "label": "Total Patients",
+        "value": 442
+      },
+      {
+        "label": "Eye Screening",
+        "value": 108
+      },
+      {
+        "label": "Cataract Surgery Registered",
+        "value": 18
+      },
+      {
+        "label": "Spectacles Distributed",
+        "value": 42
+      },
+      {
+        "label": "Blood Sugar Tests",
+        "value": 252
+      },
+      {
+        "label": "BP Checks",
+        "value": 386
+      }
+    ],
+    "doctors": [
+      {
+        "name": "Dr. Rajesh Gubba",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Vidya Sagar",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Naveen",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Harish",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Chandrakanth",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Manoj Kumar",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Navaneetha",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Sridhar (Eye specialist)",
+        "role": "Medical Specialist"
+      }
+    ],
+    "highlights": [
+      "Successfully served 442 patients from surrounding villages.",
+      "Identified 18 cataract cases scheduled for free surgery.",
+      "Conducted 386 blood pressure checks and 252 sugar tests."
+    ],
+    "testimonials": [
+      {
+        "quote": "We appreciate the selfless service of all doctors and volunteers who help our village every month.",
+        "author": "Kalwakurthy Villager"
+      }
+    ],
+    "gallery": [
+      "imgEye",
+      "imgConsultation",
+      "imgVital",
+      "imgLab",
+      "imgMedicine",
+      "imgTeam"
+    ],
+    "videoUrl": "",
+    "status": "published"
+  },
+  {
+    "id": "camp-june-2026",
+    "slug": "june-2026-free-medical-camp",
+    "type": "camp-report",
+    "title": "June 2026 Free Medical Camp",
+    "month": "June 2026",
+    "date": "June 14, 2026",
+    "location": "Sai Baba Temple Altar, Kalwakurthy",
+    "coverImage": "imgRegistration",
+    "patientsServed": 520,
+    "summary": "Our monthly camp for June saw an exceptional turnout of over 520 villagers. With hot summer conditions posing seasonal risks, our team of dedicated specialists and volunteers provided comprehensive checkups, diagnostic testing, and free drug distributions.",
+    "stats": [
+      {
+        "label": "Total Patients",
+        "value": 520
+      },
+      {
+        "label": "Eye Screening",
+        "value": 165
+      },
+      {
+        "label": "Cataract Surgery Registered",
+        "value": 28
+      },
+      {
+        "label": "Spectacles Distributed",
+        "value": 49
+      },
+      {
+        "label": "Blood Sugar Tests",
+        "value": 290
+      },
+      {
+        "label": "BP Checks",
+        "value": 340
+      }
+    ],
+    "doctors": [
+      {
+        "name": "Dr. Rajesh Gubba",
+        "role": "General Medicine"
+      },
+      {
+        "name": "Dr. Chandrakanth Chithanuri",
+        "role": "Cardiology"
+      },
+      {
+        "name": "Dr. Sridhar",
+        "role": "Eye Specialist"
+      },
+      {
+        "name": "Dr. Mounika",
+        "role": "Gynaecology"
+      },
+      {
+        "name": "Dr. Naveen",
+        "role": "General Medicine"
+      }
+    ],
+    "highlights": [
+      "Successfully screened 165 senior citizens for cataracts, scheduling 28 patients for fully funded surgeries.",
+      "Distributed free summer hydration and glucose packs along with regular prescriptions.",
+      "Over 25 dedicated local Sevadal volunteers managed registrations and crowd routing.",
+      "Provided a free nutritious lunch to all 520 attending patients and their family members."
+    ],
+    "testimonials": [
+      {
+        "quote": "I could not see clearly for two years and could not afford the operation. The doctors here registered me for cataract surgery, and now I can see my family’s faces again.",
+        "author": "Laxmamma, age 68, Kalwakurthy villager"
+      }
+    ],
+    "gallery": [
+      "imgEye",
+      "imgConsultation",
+      "imgVital",
+      "imgLab",
+      "imgMedicine",
+      "imgTeam"
+    ],
+    "videoUrl": "https://youtube.com/shorts/4VJeRkI9Qvs?feature=share"
+  }
+]

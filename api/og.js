@@ -2,6 +2,9 @@
 // This solves the SPA problem where WhatsApp/Twitter/LinkedIn can't read
 // client-side rendered meta tags
 
+import campReportsJson from '../src/data/campReports.json';
+import blogsJson from '../src/data/blogs.json';
+
 const SITE_URL = 'https://sssap.vercel.app';
 
 // Map of blog slugs to their OG metadata
@@ -118,8 +121,19 @@ export default function handler(req, res) {
         description: summary,
         image: image
       };
-    } else if (blogMeta[slug]) {
-      meta = blogMeta[slug];
+    } else {
+      // Dynamic lookup fallback from compiled JSON databases
+      const allItems = [...(campReportsJson || []), ...(blogsJson || [])];
+      const dynamicItem = allItems.find(x => x.slug === slug);
+      if (dynamicItem) {
+        meta = {
+          title: dynamicItem.title,
+          description: dynamicItem.summary,
+          image: dynamicItem.coverImage || dynamicItem.image
+        };
+      } else if (blogMeta[slug]) {
+        meta = blogMeta[slug];
+      }
     }
 
     if (meta) {

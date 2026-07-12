@@ -22,12 +22,8 @@ export const campReports = [
     "summary": "The 53rd Sri Sathya Sai Aarogya Pradayini Free Medical Camp, held on July 12, 2026, at Kalwakurthy, Nagarkurnool Dist, Telangana, successfully served 507 patients from 83 villages. The camp provided vital health screenings, including 298 sugar tests and 478 BP tests, and registered 10 cataract cases for surgery. This impactful event was made possible by the dedicated service of 8 doctors and 29 volunteers, ensuring essential medical care reached those in need.",
     "stats": [
       {
-        "label": "General Medicine",
-        "value": 304
-      },
-      {
-        "label": "Cardiology",
-        "value": 57
+        "label": "Total Patients",
+        "value": 507
       },
       {
         "label": "Eye Screening",
@@ -36,6 +32,10 @@ export const campReports = [
       {
         "label": "Cataract Surgery Registered",
         "value": 10
+      },
+      {
+        "label": "Spectacles Distributed",
+        "value": 49
       },
       {
         "label": "Blood Sugar Tests",
@@ -131,6 +131,7 @@ export const campReports = [
       "bpTests": 478,
       "sugarTests": 298,
       "cataracts": 10,
+      "spectacles": 49,
       "volunteers": 29,
       "doctorsText": "Dr. Krishna Veramalla, Dr. Rajesh Gubba, Dr. Chandrakanth Chithanuri, Dr. Sai Charan Gubba, Dr. Shushma Chithanuri, Dr. Sowmya, Dr. Harish, and Dr. Sridhar (Eye specialist)",
       "summaryText": "The 53rd Sri Sathya Sai Aarogya Pradayini Free Medical Camp, held on July 12, 2026, at Kalwakurthy, Nagarkurnool Dist, Telangana, successfully served 507 patients from 83 villages. The camp provided vital health screenings, including 298 sugar tests and 478 BP tests, and registered 10 cataract cases for surgery. This impactful event was made possible by the dedicated service of 8 doctors and 29 volunteers, ensuring essential medical care reached those in need.",
@@ -179,12 +180,8 @@ export const campReports = [
     "summary": "The 51st Sri Sathya Sai Free Medical Camp, held on May 10, 2026, in Kalwakurthy, Nagarkurnool Dist, Telangana, successfully provided vital healthcare services to 442 patients from 74 villages. The camp included comprehensive screenings with 252 sugar tests and 386 BP tests, along with distributing essential medicines. A dedicated team of 8 doctors and 21 volunteers facilitated the camp, which also identified 18 cataract cases for surgery, demonstrating a significant community health impact.",
     "stats": [
       {
-        "label": "General Medicine",
-        "value": 265
-      },
-      {
-        "label": "Cardiology",
-        "value": 46
+        "label": "Total Patients",
+        "value": 442
       },
       {
         "label": "Eye Screening",
@@ -193,6 +190,10 @@ export const campReports = [
       {
         "label": "Cataract Surgery Registered",
         "value": 18
+      },
+      {
+        "label": "Spectacles Distributed",
+        "value": 42
       },
       {
         "label": "Blood Sugar Tests",
@@ -271,6 +272,7 @@ export const campReports = [
       "bpTests": 386,
       "sugarTests": 252,
       "cataracts": 18,
+      "spectacles": 42,
       "volunteers": 21,
       "doctorsText": "Dr. Rajesh Gubba, Dr. Vidya Sagar, Dr. Naveen, Dr. Harish, Dr. Chandrakanth, Dr. Manoj Kumar, Dr. Navaneetha, Dr. Sridhar (Eye specialist)",
       "summaryText": "The 51st Sri Sathya Sai Free Medical Camp, held on May 10, 2026, in Kalwakurthy, Nagarkurnool Dist, Telangana, successfully provided vital healthcare services to 442 patients from 74 villages. The camp included comprehensive screenings with 252 sugar tests and 386 BP tests, along with distributing essential medicines. A dedicated team of 8 doctors and 21 volunteers facilitated the camp, which also identified 18 cataract cases for surgery, demonstrating a significant community health impact.",
@@ -292,12 +294,8 @@ export const campReports = [
     "summary": "Our monthly camp for June saw an exceptional turnout of over 520 villagers. With hot summer conditions posing seasonal risks, our team of dedicated specialists and volunteers provided comprehensive checkups, diagnostic testing, and free drug distributions.",
     "stats": [
       {
-        "label": "General Medicine",
-        "value": 310
-      },
-      {
-        "label": "Cardiology",
-        "value": 45
+        "label": "Total Patients",
+        "value": 520
       },
       {
         "label": "Eye Screening",
@@ -306,6 +304,10 @@ export const campReports = [
       {
         "label": "Cataract Surgery Registered",
         "value": 28
+      },
+      {
+        "label": "Spectacles Distributed",
+        "value": 49
       },
       {
         "label": "Blood Sugar Tests",

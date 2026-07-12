@@ -54,6 +54,8 @@ export const blogs = ${json};
 const publishBlogsToGithub = async (updatedBlogs) => {
   try {
     const fileContent = serializeBlogs(updatedBlogs);
+    
+    // 1. Publish JS file for React bundling
     const response = await fetch('/api/publish', {
       method: 'POST',
       headers: {
@@ -62,13 +64,31 @@ const publishBlogsToGithub = async (updatedBlogs) => {
       body: JSON.stringify({
         filePath: 'src/data/blogs.js',
         content: fileContent,
-        commitMessage: 'admin: publish blog changes'
+        commitMessage: 'admin: publish blog changes (JS)'
       })
     });
     const data = await response.json();
     if (!response.ok) {
-      throw new Error(data.error || 'Failed to publish blogs to GitHub');
+      throw new Error(data.error || 'Failed to publish blogs JS to GitHub');
     }
+
+    // 2. Publish JSON file for Vercel serverless runtime lookups
+    const responseJson = await fetch('/api/publish', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        filePath: 'src/data/blogs.json',
+        content: JSON.stringify(updatedBlogs, null, 2),
+        commitMessage: 'admin: publish blog changes (JSON)'
+      })
+    });
+    const dataJson = await responseJson.json();
+    if (!responseJson.ok) {
+      throw new Error(dataJson.error || 'Failed to publish blogs JSON to GitHub');
+    }
+
     return true;
   } catch (err) {
     console.error('Publish blogs error:', err);

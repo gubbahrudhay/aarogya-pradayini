@@ -2,7 +2,7 @@
  * Client-side image compressor and WebP converter.
  * Resizes images to a maximum width to ensure super fast website loading.
  */
-export const compressAndConvertToWebP = (file, maxWidth = 1600, quality = 0.75) => {
+export const compressAndConvertToJPEG = (file, maxWidth = 1600, quality = 0.75) => {
   return new Promise((resolve, reject) => {
     // If the file is not an image, reject
     if (!file.type.startsWith('image/')) {
@@ -35,8 +35,8 @@ export const compressAndConvertToWebP = (file, maxWidth = 1600, quality = 0.75) 
         ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, width, height);
 
-        // Export as WebP base64 Data URL
-        const dataUrl = canvas.toDataURL('image/webp', quality);
+        // Export as JPEG base64 Data URL
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
         resolve(dataUrl);
       };
       img.onerror = (err) => reject(err);

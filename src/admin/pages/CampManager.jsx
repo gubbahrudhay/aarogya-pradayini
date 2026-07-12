@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { campReports as initialCamps } from '../../data/campReports';
-import { compressAndConvertToWebP } from '../utils/imageCompressor';
+import { compressAndConvertToJPEG } from '../utils/imageCompressor';
 import {
   FileText,
   Sparkles,
@@ -132,6 +132,13 @@ const robustRegexParse = (rawText) => {
     /(\d+)\s*cataract/i
   ], 28);
 
+  const spectacles = extractNum([
+    /Spects distributed:\s*(\d+)/i,
+    /Spectacles distributed:\s*(\d+)/i,
+    /(\d+)\s*spects/i,
+    /(\d+)\s*spectacles/i
+  ], 0);
+
   const volunteers = extractNum([
     /Volunteer count:\s*(\d+)/i,
     /Volunteers:\s*(\d+)/i,
@@ -155,11 +162,11 @@ const robustRegexParse = (rawText) => {
   const summaryText = `Our monthly medical camp for ${monthName} ${year} was completed successfully at the Sai Baba temple premises in Kalwakurthy. A total of ${patients} patients from ${villages} surrounding villages were served by our whitelisted medical specialists. Free diagnostic checks, blood pressure screenings, and sugar screenings were carried out on-site. Additionally, ${cataracts} cases of cataract were diagnosed and scheduled for free surgical operations.`;
 
   // Drafts
-  const linkedinDraft = `🌟 SRI SATHYA SAI HEALTH SERVICES - KALWAKURTHY (Camp Date: ${formattedDate}) 🌟\n\nWe are overjoyed to share the impact report from our monthly medical camp conducted on ${formattedDate}:\n\n👥 Patients Served: ${patients} (${male} Male, ${female} Female)\n🏡 Villages Reached: ${villages}\n🩺 BP Screenings: ${bpTests} | Sugar Checks: ${sugarTests}\n👁️ Cataract Operations Scheduled: ${cataracts}\n\nOur heartfelt thanks to our specialist doctors and the ${volunteers} Sevadal volunteers who made this possible. "Love All, Serve All."\n\n#HealthcareForAll #NGO #SaiRam #CommunityCare`;
+  const linkedinDraft = `🌟 SRI SATHYA SAI HEALTH SERVICES - KALWAKURTHY (Camp Date: ${formattedDate}) 🌟\n\nWe are overjoyed to share the impact report from our monthly medical camp conducted on ${formattedDate}:\n\n👥 Patients Served: ${patients} (${male} Male, ${female} Female)\n🏡 Villages Reached: ${villages}\n🩺 BP Screenings: ${bpTests} | Sugar Checks: ${sugarTests}\n👁️ Cataract Operations Scheduled: ${cataracts}\n🕶️ Spectacles Distributed: ${spectacles}\n\nOur heartfelt thanks to our specialist doctors and the ${volunteers} Sevadal volunteers who made this possible. "Love All, Serve All."\n\n#HealthcareForAll #NGO #SaiRam #CommunityCare`;
 
-  const instagramDraft = `Moments of Hope and Care from Kalwakurthy on ${formattedDate}! 🧡\n\nTotal Patients: ${patients}\nVolunteers: ${volunteers}\nDiagnostics BP/Sugar: ${bpTests}/${sugarTests}\nCataract surgeries: ${cataracts} (Scheduled Free)\n\n"Service to man is service to God." 🙏\n\n#SathyaSai #FreeMedicalCamp #Telangana #SocialWork #Seva`;
+  const instagramDraft = `Moments of Hope and Care from Kalwakurthy on ${formattedDate}! 🧡\n\nTotal Patients: ${patients}\nVolunteers: ${volunteers}\nDiagnostics BP/Sugar: ${bpTests}/${sugarTests}\nCataract surgeries: ${cataracts} (Scheduled Free)\nSpectacles distributed: ${spectacles}\n\n"Service to man is service to God." 🙏\n\n#SathyaSai #FreeMedicalCamp #Telangana #SocialWork #Seva`;
 
-  const youtubeDraft = `🎥 Highlights of the Free Medical Camp conducted in Kalwakurthy on ${formattedDate}.\n\nUnder Sri Sathya Sai Health Services, we organized another successful monthly camp to serve our rural community.\n\n📊 Key Camp Statistics:\n• Patients Treated: ${patients} (${male} Male, ${female} Female)\n• Diagnostic BP & Sugar Screenings: ${bpTests} / ${sugarTests}\n• Cataract Surgeries Scheduled: ${cataracts} (Completely Free)\n• Villages Covered: ${villages}\n• Volunteers: ${volunteers}\n\nThank you to our dedicated doctors and volunteers for their selfless service. "Love All, Serve All." 🙏\n\n#SaiSeva #FreeMedicalCamp #RuralHealthcare #NGO`;
+  const youtubeDraft = `🎥 Highlights of the Free Medical Camp conducted in Kalwakurthy on ${formattedDate}.\n\nUnder Sri Sathya Sai Health Services, we organized another successful monthly camp to serve our rural community.\n\n📊 Key Camp Statistics:\n• Patients Treated: ${patients} (${male} Male, ${female} Female)\n• Diagnostic BP & Sugar Screenings: ${bpTests} / ${sugarTests}\n• Cataract Surgeries Scheduled: ${cataracts} (Completely Free)\n• Spectacles Distributed: ${spectacles}\n• Villages Covered: ${villages}\n• Volunteers: ${volunteers}\n\nThank you to our dedicated doctors and volunteers for their selfless service. "Love All, Serve All." 🙏\n\n#SaiSeva #FreeMedicalCamp #RuralHealthcare #NGO`;
 
   return {
     title,
@@ -173,6 +180,7 @@ const robustRegexParse = (rawText) => {
     bpTests,
     sugarTests,
     cataracts,
+    spectacles,
     volunteers,
     doctorsText,
     summaryText,
@@ -222,6 +230,8 @@ export const campReports = ${json};
 const publishCampsToGithub = async (updatedCamps) => {
   try {
     const fileContent = serializeCamps(updatedCamps);
+    
+    // 1. Publish JS file for React bundling
     const response = await fetch('/api/publish', {
       method: 'POST',
       headers: {
@@ -230,13 +240,31 @@ const publishCampsToGithub = async (updatedCamps) => {
       body: JSON.stringify({
         filePath: 'src/data/campReports.js',
         content: fileContent,
-        commitMessage: 'admin: publish camp report changes'
+        commitMessage: 'admin: publish camp report changes (JS)'
       })
     });
     const data = await response.json();
     if (!response.ok) {
-      throw new Error(data.error || 'Failed to publish camp reports to GitHub');
+      throw new Error(data.error || 'Failed to publish camp reports JS to GitHub');
     }
+
+    // 2. Publish JSON file for Vercel serverless runtime lookups
+    const responseJson = await fetch('/api/publish', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        filePath: 'src/data/campReports.json',
+        content: JSON.stringify(updatedCamps, null, 2),
+        commitMessage: 'admin: publish camp report changes (JSON)'
+      })
+    });
+    const dataJson = await responseJson.json();
+    if (!responseJson.ok) {
+      throw new Error(dataJson.error || 'Failed to publish camp reports JSON to GitHub');
+    }
+
     return true;
   } catch (err) {
     console.error('Publish camps error:', err);
@@ -272,6 +300,7 @@ export default function CampManager() {
     bpTests: 0,
     sugarTests: 0,
     cataracts: 0,
+    spectacles: 0,
     volunteers: 0,
     doctorsText: '',
     summaryText: '',
@@ -299,6 +328,7 @@ export default function CampManager() {
       bpTests: camp.stats?.find(s => s.label.toLowerCase().includes('bp'))?.value || 0,
       sugarTests: camp.stats?.find(s => s.label.toLowerCase().includes('sugar'))?.value || 0,
       cataracts: camp.stats?.find(s => s.label.toLowerCase().includes('cataract'))?.value || 0,
+      spectacles: camp.stats?.find(s => s.label.toLowerCase().includes('spect'))?.value || 0,
       volunteers: camp.volunteers || 25,
       doctorsText: camp.doctors?.map(d => d.name).join(', ') || '',
       summaryText: camp.summary,
@@ -327,6 +357,7 @@ export default function CampManager() {
       bpTests: 0,
       sugarTests: 0,
       cataracts: 0,
+      spectacles: 0,
       volunteers: 0,
       doctorsText: '',
       summaryText: '',
@@ -375,8 +406,7 @@ export default function CampManager() {
     try {
       if (type === 'cover') {
         const file = files[0];
-        setSuccessMsg('Compressing cover image...');
-        const base64Data = await compressAndConvertToWebP(file);
+        const base64Data = await compressAndConvertToJPEG(file);
         
         // Extract month and year from camp date
         const campDate = campDetails.date ? new Date(campDetails.date) : new Date();
@@ -393,7 +423,7 @@ export default function CampManager() {
           },
           body: JSON.stringify({
             fileContent: base64Data,
-            filename: file.name.replace(/\.[^/.]+$/, "") + ".webp",
+            filename: file.name.replace(/\.[^/.]+$/, "") + ".jpeg",
             month: monthStr,
             year: yearStr
           })
@@ -413,7 +443,7 @@ export default function CampManager() {
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           setSuccessMsg(`Compressing image ${i + 1} of ${files.length}...`);
-          const base64Data = await compressAndConvertToWebP(file);
+          const base64Data = await compressAndConvertToJPEG(file);
 
           setSuccessMsg(`Uploading image ${i + 1} of ${files.length}...`);
           const campDate = campDetails.date ? new Date(campDetails.date) : new Date();
@@ -428,7 +458,7 @@ export default function CampManager() {
             },
             body: JSON.stringify({
               fileContent: base64Data,
-              filename: file.name.replace(/\.[^/.]+$/, "") + ".webp",
+              filename: file.name.replace(/\.[^/.]+$/, "") + ".jpeg",
               month: monthStr,
               year: yearStr
             })
@@ -498,6 +528,7 @@ Extract the following variables:
 - bpTests: BP tests done (number)
 - sugarTests: sugar tests done (number)
 - cataracts: cataract cases identified (number)
+- spectacles: spectacles/glasses distributed (number)
 - volunteers: volunteer count (number)
 - doctorsText: Participating doctors list as a string
 - summaryText: A professional 3-4 sentence narrative summary of the camp's success, location, and impact.
@@ -519,6 +550,7 @@ You MUST format your response strictly as a JSON object with the exact keys:
   "bpTests": 0,
   "sugarTests": 0,
   "cataracts": 0,
+  "spectacles": 0,
   "volunteers": 0,
   "doctorsText": "...",
   "summaryText": "...",
@@ -572,6 +604,7 @@ Do not add markdown formatting or wrappers like \`\`\`json.`;
         bpTests: parsed.bpTests || parsedDetails.bpTests,
         sugarTests: parsed.sugarTests || parsedDetails.sugarTests,
         cataracts: parsed.cataracts || parsedDetails.cataracts,
+        spectacles: parsed.spectacles || parsedDetails.spectacles || 0,
         volunteers: parsed.volunteers || parsedDetails.volunteers,
         doctorsText: parsed.doctorsText || parsedDetails.doctorsText,
         summaryText: parsed.summaryText || parsedDetails.summaryText,
@@ -602,10 +635,10 @@ Do not add markdown formatting or wrappers like \`\`\`json.`;
 
     // Generate stats array matching public site format
     const statsArray = [
-      { label: 'General Medicine', value: Math.round(campDetails.patients * 0.6) },
-      { label: 'Cardiology', value: campDetails.bpTests > 0 ? Math.round(campDetails.bpTests * 0.12) : 38 },
+      { label: 'Total Patients', value: campDetails.patients },
       { label: 'Eye Screening', value: campDetails.cataracts > 0 ? Math.round(campDetails.cataracts * 6) : 140 },
       { label: 'Cataract Surgery Registered', value: campDetails.cataracts },
+      { label: 'Spectacles Distributed', value: campDetails.spectacles || 0 },
       { label: 'Blood Sugar Tests', value: campDetails.sugarTests },
       { label: 'BP Checks', value: campDetails.bpTests }
     ];
@@ -989,6 +1022,7 @@ Do not add markdown formatting or wrappers like \`\`\`json.`;
                         { key: 'bpTests', label: 'BP Tests Done' },
                         { key: 'sugarTests', label: 'Sugar Tests Done' },
                         { key: 'cataracts', label: 'Cataract Identified' },
+                        { key: 'spectacles', label: 'Spectacles Distributed' },
                         { key: 'volunteers', label: 'Volunteers Enlisted' },
                         { key: 'villages', label: 'Villages Reached' }
                       ].map((field) => (
