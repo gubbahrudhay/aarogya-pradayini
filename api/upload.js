@@ -23,10 +23,29 @@ export default async function handler(req, res) {
 
     // Target path in GitHub repository: e.g. src/assets/images/gallery/2026/june/filename.webp
     const folderPath = `src/assets/images/gallery/${year}/${month}`.toLowerCase();
-    const cleanFilename = filename.toLowerCase().replace(/[^a-z0-9.]+/g, '_');
+    const timestamp = Date.now();
+    const cleanFilename = `${timestamp}_${filename.toLowerCase().replace(/[^a-z0-9.]+/g, '_')}`;
     const path = `${folderPath}/${cleanFilename}`;
 
     const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+
+    // Check if file already exists to get SHA
+    let sha = null;
+    try {
+      const getResponse = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'User-Agent': 'Vercel-Serverless-Upload'
+        }
+      });
+      if (getResponse.ok) {
+        const fileData = await getResponse.json();
+        sha = fileData.sha;
+      }
+    } catch (e) {
+      console.log('File does not exist or error checking SHA, proceeding without SHA', e);
+    }
 
     // Push to GitHub using standard fetch
     const response = await fetch(url, {
@@ -38,7 +57,8 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         message: `upload: add ${cleanFilename} to gallery archives`,
-        content: base64Data
+        content: base64Data,
+        sha: sha || undefined
       })
     });
 
