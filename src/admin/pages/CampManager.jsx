@@ -414,9 +414,12 @@ export default function CampManager() {
         };
         reader.readAsDataURL(file);
       } else {
-        // Upload multiple files for gallery
-        const uploadPromises = files.map((file) => {
-          return new Promise((resolve, reject) => {
+        // Upload multiple files for gallery sequentially to avoid git race conditions
+        const uploadedUrls = [];
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          setSuccessMsg(`Uploading image ${i + 1} of ${files.length}...`);
+          const url = await new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onloadend = async () => {
               const base64Data = reader.result;
@@ -452,10 +455,8 @@ export default function CampManager() {
             reader.onerror = () => reject(new Error(`Failed to read ${file.name}`));
             reader.readAsDataURL(file);
           });
-        });
-
-        // Wait for all uploads to complete
-        const uploadedUrls = await Promise.all(uploadPromises);
+          uploadedUrls.push(url);
+        }
 
         setCampDetails(prev => ({
           ...prev,
