@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { campReports as initialCamps } from '../../data/campReports';
 import { compressAndConvertToJPEG } from '../utils/imageCompressor';
+import { db, isMock } from '../services/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { photos as initialPhotos } from '../../data/gallery';
 import {
   FileText,
   Sparkles,
@@ -471,11 +474,53 @@ export default function CampManager() {
           uploadedUrls.push(data.url);
         }
 
+        // Sync these newly uploaded images with the general Gallery page database
+        const campDate = campDetails.date ? new Date(campDetails.date) : new Date();
+        const months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+        const monthStr = months[campDate.getMonth()];
+        const yearStr = campDate.getFullYear().toString();
+        const monthCap = monthStr.charAt(0).toUpperCase() + monthStr.slice(1);
+        const derivedCategory = (campDetails.title || '').toLowerCase().includes('eye') ? 'Eye Camp' : 
+                                (campDetails.title || '').toLowerCase().includes('cardio') ? 'Cardiology' : 'General Camp';
+
+        if (isMock) {
+          const savedMock = localStorage.getItem('mock_gallery_photos');
+          const currentPhotos = savedMock ? JSON.parse(savedMock) : [...initialPhotos];
+          const newPhotos = uploadedUrls.map((url, idx) => ({
+            id: `mock-img-${Date.now()}-${idx}`,
+            src: url,
+            alt: `${campDetails.title || 'Camp Report'} - Photo ${idx + 1}`,
+            category: derivedCategory,
+            month: monthCap,
+            year: yearStr,
+            createdAt: new Date().toISOString()
+          }));
+          localStorage.setItem('mock_gallery_photos', JSON.stringify([...newPhotos, ...currentPhotos]));
+        } else {
+          // Live Firestore
+          try {
+            for (let idx = 0; idx < uploadedUrls.length; idx++) {
+              const url = uploadedUrls[idx];
+              const photoRecord = {
+                src: url,
+                alt: `${campDetails.title || 'Camp Report'} - Photo ${idx + 1}`,
+                category: derivedCategory,
+                month: monthCap,
+                year: yearStr,
+                createdAt: serverTimestamp()
+              };
+              await addDoc(collection(db, 'gallery'), photoRecord);
+            }
+          } catch (fireErr) {
+            console.error('Failed to sync to Firestore gallery:', fireErr);
+          }
+        }
+
         setCampDetails(prev => ({
           ...prev,
           gallery: [...(prev.gallery || []), ...uploadedUrls]
         }));
-        setSuccessMsg(`Successfully uploaded ${uploadedUrls.length} gallery images to GitHub!`);
+        setSuccessMsg(`Successfully uploaded ${uploadedUrls.length} gallery images to GitHub and synced with General Gallery!`);
         setLoading(false);
       }
     } catch (err) {
