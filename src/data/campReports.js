@@ -10,6 +10,154 @@ import imgDoctor from '../assets/images/camp_doctor_consultation.jpeg';
 
 export const campReports = [
   {
+    "id": "camp-august-2026-free-medical-camp",
+    "slug": "august-2026-free-medical-camp",
+    "type": "camp-report",
+    "title": "August 2026 Free Medical Camp",
+    "month": "August 2026",
+    "date": "August 9, 2026",
+    "location": "Kalwakurthy, Nagarkurnool Dist, Telangana",
+    "coverImage": "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272227544_whatsapp_image_2026_08_09_at_12.29.16_pm.jpeg",
+    "patientsServed": 400,
+    "summary": "On August 9, 2026, the 54th Sri Sathya Sai Free Medical Camp was successfully conducted in Kalwakurthy, Nagarkurnool Dist, Telangana. This vital initiative served 400 patients, including 130 males and 270 females, from 87 surrounding villages. The camp provided comprehensive health screenings, including 250 sugar tests and 350 BP tests, alongside eye examinations that led to 10 cataract cases being registered for surgery and the distribution of 15 spectacles. This impactful event was made possible by the dedicated efforts of 8 doctors and 15 Sevadal volunteers, reinforcing community health and well-being.",
+    "stats": [
+      {
+        "label": "Total Patients",
+        "value": 400
+      },
+      {
+        "label": "Eye Screening",
+        "value": 60
+      },
+      {
+        "label": "Cataract Surgery Registered",
+        "value": 10
+      },
+      {
+        "label": "Spectacles Distributed",
+        "value": 15
+      },
+      {
+        "label": "Blood Sugar Tests",
+        "value": 250
+      },
+      {
+        "label": "BP Checks",
+        "value": 350
+      }
+    ],
+    "doctors": [
+      {
+        "name": "Dr. Swamy",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Rajesh Gubba",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Ramya Gubba",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Sai Charan Gubba",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Chandrakanth Chithanuri",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Pravalika Alladi",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Sushma Chithanuri",
+        "role": "Medical Specialist"
+      },
+      {
+        "name": "Dr. Sridhar (Eye specialist)",
+        "role": "Medical Specialist"
+      }
+    ],
+    "highlights": [
+      "Successfully served 400 patients from surrounding villages.",
+      "Identified 10 cataract cases scheduled for free surgery.",
+      "Conducted 350 blood pressure checks and 250 sugar tests."
+    ],
+    "testimonials": [
+      {
+        "quote": "We appreciate the selfless service of all doctors and volunteers who help our village every month.",
+        "author": "Kalwakurthy Villager"
+      }
+    ],
+    "gallery": [
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272238873_whatsapp_image_2026_08_09_at_12.27.12_pm.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272240468_whatsapp_image_2026_08_09_at_12.28.33_pm.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272242550_whatsapp_image_2026_08_09_at_12.29.02_pm.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272244423_whatsapp_image_2026_08_09_at_12.29.16_pm.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272245983_whatsapp_image_2026_08_09_at_12.29.40_pm.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272266602_whatsapp_image_2026_08_09_at_11.31.11_am.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272268555_whatsapp_image_2026_08_09_at_11.30.39_am.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272270186_whatsapp_image_2026_08_09_at_11.30.31_am.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272271993_whatsapp_image_2026_08_09_at_11.30.17_am.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272273518__.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272292914_whatsapp_image_aug_9_2026_7_.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272294864_whatsapp_image_aug_9_2026_6_.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272296861_whatsapp_image_aug_9_2026_5_.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272298676_whatsapp_image_aug_9_2026_3_.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272300788_whatsapp_image_aug_9_2026_4_.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272302724_whatsapp_image_aug_9_2026_2_.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272304617_whatsapp_image_aug_9_2026_1_.jpeg",
+      "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272306408_whatsapp_image_aug_9_2026.jpeg"
+    ],
+    "videoUrl": "",
+    "status": "published",
+    "rawReport": "*🌹Om Sri Sai Ram🌹*\n*Sri Sathya Sai Aarogya Pradayini *\n*Sri Sathya Sai Free Medical Camp*\n*54 Medical Camp - 9th August 2026 (Every 2nd Sunday)*\nLoving Sairam! \nWith Bhagawan Baba’s blessings conducted 54 Free Medical Camp at Kalwakurthy, Nagarkurnool Dist, Telangana\n1. 09-08-2026 Sri Sathya Sai Aarogya Pradayini free Medical camp was conducted at Kalwakurthy. Started with Omkaram at 8.30am\n2. A Total of 400*( 130 male +  270 female)* patients availed the camp including the eye camp. 10 cataract cases have been registered for surgeries.\n3.  1. Dr. Swamy \n     2. Dr. Rajesh Gubba\n     3. Dr. Ramya Gubba\n     4. Dr. Sai Charan Gubba\n     5. Dr. Chandrakanth Chithanuri\n     6. Dr. Pravalika Alladi\n     7. Dr. Sushma Chithanuri \n     8. Dr. Sridhar (Eye specialist ) examined and prescribed the medicines.\n4.  Total 87 villages covered. \n5.  We have done 250 Sugar tests (GRBS) and 350 BP tests\n6.  Given medicines for one month BP & Sugar patients and for others patients  week medicines.\n7.  15 Spects distributed and 8 cataract cases and 1 pterygium case have been registered for surgeries.\n8.  15 members of Sevadal participated in the Camp from Kalwakurthy Samithi.\n9.  Bhagawan Prasadam ( Full meals) provided to all. The camp closed at 2.30pm\n\n-Team, Sri Sathya Sai Seva Samithi,\n *Kalwakurthy* , Nagarkurnool Dist, Telangana.",
+    "editorFields": {
+      "title": "August 2026 Free Medical Camp",
+      "date": "2026-08-09",
+      "location": "Kalwakurthy, Nagarkurnool Dist, Telangana",
+      "status": "draft",
+      "patients": 400,
+      "male": 130,
+      "female": 270,
+      "villages": 87,
+      "bpTests": 350,
+      "sugarTests": 250,
+      "cataracts": 10,
+      "spectacles": 15,
+      "volunteers": 15,
+      "doctorsText": "Dr. Swamy, Dr. Rajesh Gubba, Dr. Ramya Gubba, Dr. Sai Charan Gubba, Dr. Chandrakanth Chithanuri, Dr. Pravalika Alladi, Dr. Sushma Chithanuri, Dr. Sridhar (Eye specialist)",
+      "summaryText": "On August 9, 2026, the 54th Sri Sathya Sai Free Medical Camp was successfully conducted in Kalwakurthy, Nagarkurnool Dist, Telangana. This vital initiative served 400 patients, including 130 males and 270 females, from 87 surrounding villages. The camp provided comprehensive health screenings, including 250 sugar tests and 350 BP tests, alongside eye examinations that led to 10 cataract cases being registered for surgery and the distribution of 15 spectacles. This impactful event was made possible by the dedicated efforts of 8 doctors and 15 Sevadal volunteers, reinforcing community health and well-being.",
+      "linkedinDraft": "We are incredibly proud to share the success of our 54th Sri Sathya Sai Free Medical Camp held on August 9, 2026, in Kalwakurthy, Nagarkurnool Dist, Telangana! A total of 400 patients (130 male, 270 female) from 87 villages received vital health services, including 250 sugar tests and 350 BP tests. We identified 10 cataract cases for surgery and distributed 15 spectacles, making a tangible difference in community eye health.\n\nA heartfelt thank you to our 8 dedicated doctors – Dr. Swamy, Dr. Rajesh Gubba, Dr. Ramya Gubba, Dr. Sai Charan Gubba, Dr. Chandrakanth Chithanuri, Dr. Pravalika Alladi, Dr. Sushma Chithanuri, and Dr. Sridhar (Eye specialist) – for their invaluable expertise. Our deepest gratitude also goes to the 15 selfless Sevadal volunteers whose unwavering commitment ensured the smooth execution of the camp. Together, we continue to serve and uplift communities. #MedicalCamp #CommunityHealth #FreeHealthcare #SriSathyaSai #Volunteering",
+      "instagramDraft": "What an incredible day of service! 🙏 Our 54th Sri Sathya Sai Free Medical Camp on August 9, 2026, in Kalwakurthy, Nagarkurnool Dist, Telangana, was a HUGE success! 🌟\n\nWe served 400 patients (130 male, 270 female) from 87 villages, conducted 250 sugar tests & 350 BP tests, and registered 10 cataract cases for surgeries! 🏥 Plus, 15 spectacles were distributed! ✨\n\nMassive shoutout to our amazing team of 8 doctors and 15 dedicated Sevadal volunteers who made it all possible! Your selfless service brings hope and healing. ❤️ Thank you for being the change!\n\n#FreeMedicalCamp #Kalwakurthy #CommunityLove #HealthcareForAll #VolunteersRock #EyesightMatters #MakingADifference #SriSathyaSai #Gratitude",
+      "youtubeDraft": "Join us for a recap of the impactful 54th Sri Sathya Sai Free Medical Camp, successfully held on August 9, 2026, in Kalwakurthy, Nagarkurnool Dist, Telangana. This camp was a beacon of hope and health for the local community, demonstrating the power of collective service.\n\n**Highlights of the Camp:**\n*   **Patients Served:** A remarkable 400 individuals (130 male, 270 female) received free medical consultation and medicines.\n*   **Broad Reach:** Patients from 87 different villages availed the camp's facilities.\n*   **Health Screenings:** We conducted 250 sugar tests (GRBS) and 350 BP tests, providing crucial health insights.\n*   **Eye Care Impact:** 10 cataract cases were identified and registered for surgeries, and 15 spectacles were distributed, significantly improving visual health.\n*   **Dedicated Doctors:** Our camp was powered by a team of 8 expert doctors: Dr. Swamy, Dr. Rajesh Gubba, Dr. Ramya Gubba, Dr. Sai Charan Gubba, Dr. Chandrakanth Chithanuri, Dr. Pravalika Alladi, Dr. Sushma Chithanuri, and Dr. Sridhar (Eye specialist). Their expertise and compassionate care were invaluable.\n*   **Selfless Volunteers:** 15 dedicated Sevadal volunteers from Kalwakurthy Samithi ensured the camp ran smoothly from start to finish, reflecting true spirit of service.\n*   **Community Welfare:** Bhagawan Prasadam (full meals) was provided to all attendees, ensuring their comfort and well-being. The camp commenced at 8:30 AM with Omkaram and concluded successfully at 2:30 PM.\n\nWe extend our deepest gratitude to all the doctors, volunteers, and well-wishers who contributed to the immense success of this camp. Your support helps us continue our mission of providing free healthcare to those in need.\n\n#MedicalCamp #FreeHealthServices #CommunitySupport #SriSathyaSaiSeva #Kalwakurthy #Healthcare #Volunteering #EyeCare #HealthIsWealth",
+      "videoUrl": "",
+      "coverImage": "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272227544_whatsapp_image_2026_08_09_at_12.29.16_pm.jpeg",
+      "gallery": [
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272238873_whatsapp_image_2026_08_09_at_12.27.12_pm.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272240468_whatsapp_image_2026_08_09_at_12.28.33_pm.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272242550_whatsapp_image_2026_08_09_at_12.29.02_pm.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272244423_whatsapp_image_2026_08_09_at_12.29.16_pm.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272245983_whatsapp_image_2026_08_09_at_12.29.40_pm.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272266602_whatsapp_image_2026_08_09_at_11.31.11_am.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272268555_whatsapp_image_2026_08_09_at_11.30.39_am.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272270186_whatsapp_image_2026_08_09_at_11.30.31_am.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272271993_whatsapp_image_2026_08_09_at_11.30.17_am.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272273518__.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272292914_whatsapp_image_aug_9_2026_7_.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272294864_whatsapp_image_aug_9_2026_6_.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272296861_whatsapp_image_aug_9_2026_5_.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272298676_whatsapp_image_aug_9_2026_3_.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272300788_whatsapp_image_aug_9_2026_4_.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272302724_whatsapp_image_aug_9_2026_2_.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272304617_whatsapp_image_aug_9_2026_1_.jpeg",
+        "https://raw.githubusercontent.com/gubbahrudhay/aarogya-pradayini/main/src/assets/images/gallery/2026/august/1786272306408_whatsapp_image_aug_9_2026.jpeg"
+      ]
+    }
+  },
+  {
     "id": "camp-sri-sathya-sai-aarogya-pradayini-free-medical-camp",
     "slug": "sri-sathya-sai-aarogya-pradayini-free-medical-camp",
     "type": "camp-report",
