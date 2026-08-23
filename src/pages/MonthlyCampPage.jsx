@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useMemo } from 'react';
 import SEO from '../components/SEO';
 import MonthlyCamp from '../sections/MonthlyCamp';
 import { Calendar, MapPin, Clock, Phone } from 'lucide-react';
@@ -6,6 +7,59 @@ import { Calendar, MapPin, Clock, Phone } from 'lucide-react';
 const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } };
 
 export default function MonthlyCampPage() {
+  const {
+    monthName,
+    year,
+    daysInMonth,
+    firstDayOfWeek,
+    secondSundayDate,
+    formattedSecondSunday
+  } = useMemo(() => {
+    let current = new Date();
+    let year = current.getFullYear();
+    let month = current.getMonth();
+    
+    const getSecondSunday = (y, m) => {
+      const firstDay = new Date(y, m, 1).getDay();
+      const firstSunday = firstDay === 0 ? 1 : 8 - firstDay;
+      return firstSunday + 7;
+    };
+    
+    let secondSundayDate = getSecondSunday(year, month);
+    
+    // If today is past the 2nd Sunday, show next month's camp
+    if (current.getDate() > secondSundayDate) {
+      month++;
+      if (month > 11) {
+        month = 0;
+        year++;
+      }
+      secondSundayDate = getSecondSunday(year, month);
+    }
+    
+    const targetMonthDate = new Date(year, month, 1);
+    const monthName = targetMonthDate.toLocaleString('en-US', { month: 'long' });
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfWeek = targetMonthDate.getDay();
+    
+    const secondSundayObj = new Date(year, month, secondSundayDate);
+    const formattedSecondSunday = secondSundayObj.toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    });
+    
+    return {
+      monthName,
+      year,
+      daysInMonth,
+      firstDayOfWeek,
+      secondSundayDate,
+      formattedSecondSunday
+    };
+  }, []);
+
   return (
     <>
       <SEO
@@ -62,7 +116,7 @@ export default function MonthlyCampPage() {
               <div>
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="font-poppins font-bold text-base text-text-primary">
-                    Camp Scheduler (July 2026)
+                    Camp Scheduler ({monthName} {year})
                   </h3>
                   <span className="bg-primary/5 text-primary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider font-inter border border-primary/10">
                     2nd Sunday Highlighted
@@ -78,17 +132,17 @@ export default function MonthlyCampPage() {
                     </span>
                   ))}
 
-                  {/* Empty slots for July 2026 (Starts on Wednesday = 3 slots offset) */}
-                  {[...Array(3)].map((_, i) => (
+                  {/* Empty slots */}
+                  {[...Array(firstDayOfWeek)].map((_, i) => (
                     <span key={`empty-${i}`} className="py-2.5 opacity-0">
                       -
                     </span>
                   ))}
 
                   {/* Days of month */}
-                  {[...Array(31)].map((_, i) => {
+                  {[...Array(daysInMonth)].map((_, i) => {
                     const day = i + 1;
-                    const isSecondSunday = day === 12; // July 12 is the 2nd Sunday in 2026
+                    const isSecondSunday = day === secondSundayDate;
                     return (
                       <div
                         key={day}
@@ -124,7 +178,7 @@ export default function MonthlyCampPage() {
                   Next Scheduled Camp
                 </span>
                 <h3 className="font-poppins font-extrabold text-2xl text-text-primary mb-6">
-                  July Medical Camp
+                  {monthName} Medical Camp
                 </h3>
 
                 <div className="space-y-4">
@@ -132,7 +186,7 @@ export default function MonthlyCampPage() {
                     <Calendar className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="text-[10px] font-bold text-text-secondary/60 uppercase tracking-wider font-inter">Date</p>
-                      <p className="text-xs font-bold text-text-primary">Sunday, July 12, 2026</p>
+                      <p className="text-xs font-bold text-text-primary">{formattedSecondSunday}</p>
                     </div>
                   </div>
 
