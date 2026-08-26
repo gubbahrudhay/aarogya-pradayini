@@ -2,8 +2,8 @@
 // This solves the SPA problem where WhatsApp/Twitter/LinkedIn can't read
 // client-side rendered meta tags
 
-import campReportsJson from '../src/data/campReports.json';
-import blogsJson from '../src/data/blogs.json';
+import campReportsJson from '../src/data/campReports.json' with { type: "json" };
+import blogsJson from '../src/data/blogs.json' with { type: "json" };
 
 const SITE_URL = 'https://sssap.vercel.app';
 
@@ -145,12 +145,16 @@ export default function handler(req, res) {
   }
 
   if (!meta) {
-    // If it's a slug, fallback to redirect to the actual blog page
-    if (slug) {
-      return res.redirect(302, `${SITE_URL}/blog/${slug}`);
-    }
-    // General fallback
-    return res.redirect(302, SITE_URL);
+    // General fallback with default metadata to prevent infinite redirect loops for bots
+    meta = {
+      title: 'Sri Satya Sai Aarogya Pradayini',
+      description: 'Free monthly medical camps in Kalwakurthy. Specialist consultations, eye screening, and free cataract surgeries.',
+      image: '/og/camp_consultation_hall.jpeg'
+    };
+    fullTitle = meta.title;
+    imageUrl = `${SITE_URL}${meta.image}`;
+    pageUrl = slug ? `${SITE_URL}/blog/${slug}` : SITE_URL;
+    ogType = 'website';
   }
 
   // Return HTML with proper OG tags + instant redirect for real users
