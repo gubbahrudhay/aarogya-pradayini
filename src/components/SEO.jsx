@@ -5,7 +5,7 @@ export default function SEO({ title, description, image }) {
   const siteDesc = description || 'Free monthly medical camps in Kalwakurthy, Telangana. Specialist healthcare for all.';
   
   // Use a default social banner fallback if no specific image is provided
-  const siteImage = image || 'https://sssap.vercel.app/assets/images/logo.jpg';
+  const siteImage = image || 'https://sssap.vercel.app/og/camp_consultation_hall.jpeg';
 
   return (
     <Helmet>
